@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../../common';
+import { Button, FormInput, FormButton } from '../../common';
 
 function RenderHomePage(props) {
   const {
@@ -10,6 +10,7 @@ function RenderHomePage(props) {
     handleSubmit,
     handleQueryInput,
     handleLocInput,
+    onLocationSelect,
   } = props;
 
   return (
@@ -29,35 +30,6 @@ function RenderHomePage(props) {
         <p>
           <Link to="/datavis">Data Visualizations Example</Link>
         </p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Search..."
-            onChange={handleQueryInput}
-          />
-          <input
-            type="text"
-            placeholder="Located near..."
-            onChange={handleLocInput}
-          />
-          <button type="submit">Search</button>
-        </form>
-
-        {searchResults ? (
-          <React.Fragment>
-            {searchResults[0].items.map(result => {
-              return (
-                <div key={result.venue.id}>
-                  <h4>{result.venue.name}</h4>
-                  <p>Category: {result.venue.categories[0].name}</p>
-                  <p>Address: {result.venue.location.address}</p>
-                </div>
-              );
-            })}
-          </React.Fragment>
-        ) : (
-          <React.Fragment></React.Fragment>
-        )}
         <p>
           <Button
             handleClick={() => authService.logout()}
@@ -65,6 +37,45 @@ function RenderHomePage(props) {
           />
         </p>
       </div>
+
+      <form onSubmit={handleSubmit}>
+        <FormInput
+          labelId="Search"
+          name="Search"
+          placeholder="Attractions, Food etc..."
+          onChange={handleQueryInput}
+        />
+        <FormInput
+          labelId="Located"
+          name="Located"
+          placeholder="Near..."
+          onChange={handleLocInput}
+        />
+        <FormButton buttonText="Search" isDisabled={false} />
+      </form>
+
+      {searchResults ? (
+        <React.Fragment>
+          {searchResults.map(result => {
+            const coordinates = {};
+            coordinates['lat'] = result.venue.location.lat;
+            coordinates['lng'] = result.venue.location.lng;
+
+            return (
+              <div
+                key={result.venue.id}
+                onClick={() => onLocationSelect(coordinates)}
+              >
+                <h4>{result.venue.name}</h4>
+                <p>Category: {result.venue.categories[0].name}</p>
+                <p>Address: {result.venue.location.address}</p>
+              </div>
+            );
+          })}
+        </React.Fragment>
+      ) : (
+        <React.Fragment></React.Fragment>
+      )}
     </div>
   );
 }

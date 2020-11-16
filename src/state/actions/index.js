@@ -16,7 +16,7 @@ export const fetchResults = (location, query) => dispatch => {
     .then(res => {
       dispatch({
         type: FETCH_RESULTS,
-        payload: res.data.response.groups,
+        payload: res.data.response.groups[0].items,
       });
     })
     .catch(err => console.log(err));

@@ -14,6 +14,7 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
 
   const [queryInput, setQueryInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
+  const [coordinates, setCoordinates] = useState(null);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -32,7 +33,7 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
         return setUserInfo(null);
       });
     return () => (isSubscribed = false);
-  }, [memoAuthService, searchResults]);
+  }, [memoAuthService]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -49,6 +50,10 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
     setLocationInput(res);
   };
 
+  const onLocationSelect = pair => {
+    setCoordinates(pair);
+  };
+
   return (
     <React.Fragment>
       {authState.isAuthenticated && !userInfo && (
@@ -59,12 +64,14 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
           userInfo={userInfo}
           authService={authService}
           searchResults={searchResults}
-          queryInput={queryInput}
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}
           handleLocInput={e => handleLocInput(e)}
+          onLocationSelect={onLocationSelect}
         />
       )}
+
+      {coordinates ? console.log('coordinates', coordinates) : null}
     </React.Fragment>
   );
 }
