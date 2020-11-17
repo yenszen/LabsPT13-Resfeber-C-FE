@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, FormInput, FormButton } from '../../common';
 
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+
 function RenderHomePage(props) {
   const {
     userInfo,
@@ -9,8 +12,11 @@ function RenderHomePage(props) {
     searchResults,
     handleSubmit,
     handleQueryInput,
-    handleLocInput,
+    handleLocationInput,
     onLocationSelect,
+    selectedCategory,
+    dropdownOptions,
+    onCategorySelect,
   } = props;
 
   return (
@@ -39,6 +45,12 @@ function RenderHomePage(props) {
       </div>
 
       <form onSubmit={handleSubmit}>
+        <Dropdown
+          options={dropdownOptions}
+          onChange={onCategorySelect}
+          value={selectedCategory.label}
+          placeholder="Select a category"
+        />
         <FormInput
           labelId="Search"
           name="Search"
@@ -49,7 +61,7 @@ function RenderHomePage(props) {
           labelId="Located"
           name="Located"
           placeholder="Near..."
-          onChange={handleLocInput}
+          onChange={handleLocationInput}
         />
         <FormButton buttonText="Search" isDisabled={false} />
       </form>

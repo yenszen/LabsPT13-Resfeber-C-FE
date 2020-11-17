@@ -4,18 +4,32 @@
 // You can have multiple action creators per file if it makes sense to the purpose those action creators are serving.
 // Declare action TYPES at the top of the file
 import axios from 'axios';
-import { FETCH_RESULTS } from './types';
+import { FETCH_SEARCH_RESULTS, FETCH_CATEGORY_RESULTS } from './types';
 
 const version = '20201010';
 
-export const fetchResults = (location, query) => dispatch => {
+export const fetchSearchResults = (location, query) => dispatch => {
   return axios
     .get(
       `https://api.foursquare.com/v2/venues/explore?near=${location}&query=${query}&client_id=${process.env.REACT_APP_FS_CLIENT_ID}&client_secret=${process.env.REACT_APP_FS_CLIENT_SECRET}&v=${version}`
     )
     .then(res => {
       dispatch({
-        type: FETCH_RESULTS,
+        type: FETCH_SEARCH_RESULTS,
+        payload: res.data.response.groups[0].items,
+      });
+    })
+    .catch(err => console.log(err));
+};
+
+export const fetchCategoryResults = (location, section) => dispatch => {
+  return axios
+    .get(
+      `https://api.foursquare.com/v2/venues/explore?near=${location}&section=${section}&client_id=${process.env.REACT_APP_FS_CLIENT_ID}&client_secret=${process.env.REACT_APP_FS_CLIENT_SECRET}&v=${version}`
+    )
+    .then(res => {
+      dispatch({
+        type: FETCH_CATEGORY_RESULTS,
         payload: res.data.response.groups[0].items,
       });
     })

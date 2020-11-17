@@ -4,9 +4,17 @@ import { useOktaAuth } from '@okta/okta-react';
 import RenderHomePage from './RenderHomePage';
 
 import { connect } from 'react-redux';
-import { fetchResults } from '../../../state/actions/index';
+import {
+  fetchSearchResults,
+  fetchCategoryResults,
+} from '../../../state/actions/index';
 
-function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
+function HomeContainer({
+  LoadingComponent,
+  fetchSearchResults,
+  fetchCategoryResults,
+  searchResults,
+}) {
   const { authState, authService } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
   // eslint-disable-next-line
@@ -15,6 +23,10 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
   const [queryInput, setQueryInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
   const [coordinates, setCoordinates] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState({
+    value: 'topPicks',
+    label: 'Top Picks',
+  });
 
   useEffect(() => {
     let isSubscribed = true;
@@ -37,7 +49,12 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    fetchResults(locationInput, queryInput);
+
+    if (queryInput === '') {
+      fetchCategoryResults(locationInput, selectedCategory.value);
+    } else {
+      fetchSearchResults(locationInput, queryInput);
+    }
   };
 
   const handleQueryInput = e => {
@@ -45,13 +62,29 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
     setQueryInput(res);
   };
 
-  const handleLocInput = e => {
+  const handleLocationInput = e => {
     const res = e.target.value.split(' ').join('+');
     setLocationInput(res);
   };
 
   const onLocationSelect = pair => {
     setCoordinates(pair);
+  };
+
+  const dropdownOptions = [
+    { value: 'topPicks', label: 'Top Picks' },
+    { value: 'food', label: 'Food' },
+    { value: 'drinks', label: 'Drinks' },
+    { value: 'coffee', label: 'Coffee' },
+    { value: 'shops', label: 'Shops' },
+    { value: 'arts', label: 'Arts' },
+    { value: 'outdoors', label: 'Outdoors' },
+    { value: 'sights', label: 'Sights' },
+    { value: 'trending', label: 'Trending' },
+  ];
+
+  const onCategorySelect = option => {
+    setSelectedCategory(option);
   };
 
   return (
@@ -66,12 +99,13 @@ function HomeContainer({ LoadingComponent, fetchResults, searchResults }) {
           searchResults={searchResults}
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}
-          handleLocInput={e => handleLocInput(e)}
+          handleLocationInput={e => handleLocationInput(e)}
           onLocationSelect={onLocationSelect}
+          selectedCategory={selectedCategory}
+          dropdownOptions={dropdownOptions}
+          onCategorySelect={onCategorySelect}
         />
       )}
-
-      {coordinates ? console.log('coordinates', coordinates) : null}
     </React.Fragment>
   );
 }
@@ -82,4 +116,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { fetchResults })(HomeContainer);
+export default connect(mapStateToProps, {
+  fetchSearchResults,
+  fetchCategoryResults,
+})(HomeContainer);

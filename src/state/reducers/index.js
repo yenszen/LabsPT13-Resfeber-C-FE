@@ -3,7 +3,9 @@
 
 export const reducers = (state = {}, action) => {
   switch (action.type) {
-    case 'FETCH_RESULTS':
+    case 'FETCH_SEARCH_RESULTS':
+      return { ...state, searchResults: action.payload };
+    case 'FETCH_CATEGORY_RESULTS':
       return { ...state, searchResults: action.payload };
     default:
       return state;
