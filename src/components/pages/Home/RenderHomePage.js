@@ -48,7 +48,7 @@ function RenderHomePage(props) {
         <Dropdown
           options={dropdownOptions}
           onChange={onCategorySelect}
-          value={selectedCategory.label}
+          value={selectedCategory ? selectedCategory.label : null}
           placeholder="Select a category"
         />
         <FormInput
