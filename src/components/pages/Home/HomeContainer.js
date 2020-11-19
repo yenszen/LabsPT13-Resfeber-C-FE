@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-
 import RenderHomePage from './RenderHomePage';
-
 import { connect } from 'react-redux';
 import {
   fetchSearchResults,
@@ -17,15 +15,19 @@ function HomeContainer({
 }) {
   const { authState, authService } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
-  // eslint-disable-next-line
   const [memoAuthService] = useMemo(() => [authService], []);
-
   const [queryInput, setQueryInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
-  const [coordinates, setCoordinates] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState({
-    value: 'topPicks',
-    label: 'Top Picks',
+    value: '',
+    label: '',
+  });
+  const [viewport, setViewport] = useState({
+    latitude: 38.9072,
+    longitude: -77.0369,
+    width: '100%',
+    height: '90vh',
+    zoom: 10,
   });
 
   useEffect(() => {
@@ -47,6 +49,18 @@ function HomeContainer({
     return () => (isSubscribed = false);
   }, [memoAuthService]);
 
+  useEffect(() => {
+    if (searchResults) {
+      const newViewport = {
+        ...viewport,
+        latitude: searchResults[0].venue.location.lat,
+        longitude: searchResults[0].venue.location.lng,
+      };
+
+      setViewport(newViewport);
+    }
+  }, [searchResults]);
+
   const handleSubmit = e => {
     e.preventDefault();
 
@@ -55,6 +69,7 @@ function HomeContainer({
     } else {
       fetchSearchResults(locationInput, queryInput);
     }
+    setViewport({ ...viewport, zoom: 10 });
   };
 
   const handleQueryInput = e => {
@@ -65,10 +80,6 @@ function HomeContainer({
   const handleLocationInput = e => {
     const res = e.target.value.split(' ').join('+');
     setLocationInput(res);
-  };
-
-  const onLocationSelect = pair => {
-    setCoordinates(pair);
   };
 
   const dropdownOptions = [
@@ -100,10 +111,11 @@ function HomeContainer({
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}
           handleLocationInput={e => handleLocationInput(e)}
-          onLocationSelect={onLocationSelect}
           selectedCategory={selectedCategory}
           dropdownOptions={dropdownOptions}
           onCategorySelect={onCategorySelect}
+          viewport={viewport}
+          setViewport={setViewport}
         />
       )}
     </React.Fragment>

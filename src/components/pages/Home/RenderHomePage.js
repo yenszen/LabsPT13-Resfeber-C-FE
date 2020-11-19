@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, FormInput, FormButton } from '../../common';
-
+import ReactMapGL from 'react-map-gl';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
@@ -13,10 +13,11 @@ function RenderHomePage(props) {
     handleSubmit,
     handleQueryInput,
     handleLocationInput,
-    onLocationSelect,
     selectedCategory,
     dropdownOptions,
     onCategorySelect,
+    viewport,
+    setViewport,
   } = props;
 
   return (
@@ -67,18 +68,18 @@ function RenderHomePage(props) {
         <FormButton buttonText="Search" isDisabled={false} />
       </form>
 
+      <ReactMapGL
+        {...viewport}
+        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
+        onViewportChange={viewport => setViewport(viewport)}
+      ></ReactMapGL>
+
       {searchResults ? (
         <React.Fragment>
           {searchResults.map(result => {
-            const coordinates = {};
-            coordinates['lat'] = result.venue.location.lat;
-            coordinates['lng'] = result.venue.location.lng;
-
             return (
-              <div
-                key={result.venue.id}
-                onClick={() => onLocationSelect(coordinates)}
-              >
+              <div key={result.venue.id}>
                 <h4>{result.venue.name}</h4>
                 <p>Category: {result.venue.categories[0].name}</p>
                 <p>Address: {result.venue.location.address}</p>
