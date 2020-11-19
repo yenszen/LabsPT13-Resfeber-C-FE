@@ -63,6 +63,7 @@ function HomeContainer({
 
       setViewport(newViewport);
     }
+    // eslint-disable-next-line
   }, [searchResults]);
 
   useEffect(() => {
