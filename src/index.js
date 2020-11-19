@@ -16,6 +16,8 @@ import { reducers } from './state/reducers/index';
 import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import 'antd/dist/antd.less';
 
+import './app.css';
+
 import { NotFoundPage } from './components/pages/NotFound';
 import { ExampleListPage } from './components/pages/ExampleList';
 import { HomePage } from './components/pages/Home';
