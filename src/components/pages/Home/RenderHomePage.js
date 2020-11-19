@@ -21,7 +21,7 @@ function RenderHomePage(props) {
 
   return (
     <div>
-      <h1>Hi {userInfo.name} Welcome to Resfeber</h1>
+      <h1>hi sara welcome to labs basic spa</h1>
       <div>
         <p>
           This is an example of a common example of how we'd like for you to
