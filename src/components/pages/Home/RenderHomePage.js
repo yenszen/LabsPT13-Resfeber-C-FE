@@ -24,6 +24,8 @@ function RenderHomePage(props) {
     tempMarkers,
     addMarkers,
     removeMarkers,
+    mapView,
+    handleMapView,
   } = props;
 
   return (
@@ -74,52 +76,58 @@ function RenderHomePage(props) {
         <FormButton buttonText="Search" isDisabled={false} />
       </form>
 
+      <Button
+        buttonText={mapView ? 'List View' : 'Map View'}
+        handleClick={handleMapView}
+      />
       <Button buttonText="Clear map markers" handleClick={removeMarkers} />
 
-      <ReactMapGL
-        {...viewport}
-        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
-        onViewportChange={viewport => setViewport(viewport)}
-      >
-        {tempMarkers.length > 0 ? (
-          <React.Fragment>
-            {tempMarkers.map(result => (
-              <Marker
-                key={result.venue.id}
-                latitude={result.venue.location.lat}
-                longitude={result.venue.location.lng}
-              >
-                <div
-                  onClick={e => {
-                    e.preventDefault();
-                    setSelectedResult(result);
-                  }}
-                  className="marker"
+      {mapView ? (
+        <ReactMapGL
+          {...viewport}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+          mapStyle="mapbox://styles/mapbox/streets-v11"
+          onViewportChange={viewport => setViewport(viewport)}
+        >
+          {tempMarkers.length > 0 ? (
+            <React.Fragment>
+              {tempMarkers.map(result => (
+                <Marker
+                  key={result.venue.id}
+                  latitude={result.venue.location.lat}
+                  longitude={result.venue.location.lng}
                 >
-                  <span></span>
-                </div>
-              </Marker>
-            ))}
-          </React.Fragment>
-        ) : null}
+                  <div
+                    onClick={e => {
+                      e.preventDefault();
+                      setSelectedResult(result);
+                    }}
+                    className="marker"
+                  >
+                    <span></span>
+                  </div>
+                </Marker>
+              ))}
+            </React.Fragment>
+          ) : null}
 
-        {selectedResult ? (
-          <Popup
-            latitude={selectedResult.venue.location.lat}
-            longitude={selectedResult.venue.location.lng}
-            onClose={() => setSelectedResult(null)}
-          >
-            <div>
-              <h4>{selectedResult.venue.name}</h4>
-              <p>Category: {selectedResult.venue.categories[0].name}</p>
-              <p>Address: {selectedResult.venue.location.address}</p>
-            </div>
-          </Popup>
-        ) : null}
-      </ReactMapGL>
+          {selectedResult ? (
+            <Popup
+              latitude={selectedResult.venue.location.lat}
+              longitude={selectedResult.venue.location.lng}
+              onClose={() => setSelectedResult(null)}
+            >
+              <div>
+                <h4>{selectedResult.venue.name}</h4>
+                <p>Category: {selectedResult.venue.categories[0].name}</p>
+                <p>Address: {selectedResult.venue.location.address}</p>
+              </div>
+            </Popup>
+          ) : null}
+        </ReactMapGL>
+      ) : null}
 
-      {searchResults ? (
+      {searchResults && !mapView ? (
         <React.Fragment>
           {searchResults.map(result => {
             return (
@@ -135,9 +143,7 @@ function RenderHomePage(props) {
             );
           })}
         </React.Fragment>
-      ) : (
-        <React.Fragment></React.Fragment>
-      )}
+      ) : null}
     </div>
   );
 }

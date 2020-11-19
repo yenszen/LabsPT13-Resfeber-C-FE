@@ -15,6 +15,7 @@ function HomeContainer({
 }) {
   const { authState, authService } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
+  // eslint-disable-next-line
   const [memoAuthService] = useMemo(() => [authService], []);
   const [queryInput, setQueryInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
@@ -31,6 +32,7 @@ function HomeContainer({
   });
   const [tempMarkers, setTempMarkers] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
+  const [mapView, setMapView] = useState(true);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -87,6 +89,7 @@ function HomeContainer({
     }
     setTempMarkers([]);
     setViewport({ ...viewport, zoom: 10 });
+    setMapView(false);
   };
 
   const handleQueryInput = e => {
@@ -123,6 +126,10 @@ function HomeContainer({
     setTempMarkers([]);
   };
 
+  const handleMapView = () => {
+    setMapView(!mapView);
+  };
+
   return (
     <React.Fragment>
       {authState.isAuthenticated && !userInfo && (
@@ -146,6 +153,8 @@ function HomeContainer({
           tempMarkers={tempMarkers}
           addMarkers={addMarkers}
           removeMarkers={removeMarkers}
+          mapView={mapView}
+          handleMapView={handleMapView}
         />
       )}
     </React.Fragment>
