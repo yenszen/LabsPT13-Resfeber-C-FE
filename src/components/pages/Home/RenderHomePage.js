@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, FormInput, FormButton } from '../../common';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import './Homepage.css';
 
 function RenderHomePage(props) {
   const {
@@ -18,6 +19,11 @@ function RenderHomePage(props) {
     onCategorySelect,
     viewport,
     setViewport,
+    selectedResult,
+    setSelectedResult,
+    tempMarkers,
+    addMarkers,
+    removeMarkers,
   } = props;
 
   return (
@@ -68,12 +74,50 @@ function RenderHomePage(props) {
         <FormButton buttonText="Search" isDisabled={false} />
       </form>
 
+      <Button buttonText="Clear map markers" handleClick={removeMarkers} />
+
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onViewportChange={viewport => setViewport(viewport)}
-      ></ReactMapGL>
+      >
+        {tempMarkers.length > 0 ? (
+          <React.Fragment>
+            {tempMarkers.map(result => (
+              <Marker
+                key={result.venue.id}
+                latitude={result.venue.location.lat}
+                longitude={result.venue.location.lng}
+              >
+                <div
+                  onClick={e => {
+                    e.preventDefault();
+                    setSelectedResult(result);
+                  }}
+                  className="marker"
+                >
+                  <span></span>
+                </div>
+              </Marker>
+            ))}
+          </React.Fragment>
+        ) : null}
+
+        {selectedResult ? (
+          <Popup
+            latitude={selectedResult.venue.location.lat}
+            longitude={selectedResult.venue.location.lng}
+            onClose={() => setSelectedResult(null)}
+          >
+            <div>
+              <h4>{selectedResult.venue.name}</h4>
+              <p>Category: {selectedResult.venue.categories[0].name}</p>
+              <p>Address: {selectedResult.venue.location.address}</p>
+            </div>
+          </Popup>
+        ) : null}
+      </ReactMapGL>
 
       {searchResults ? (
         <React.Fragment>
@@ -83,6 +127,10 @@ function RenderHomePage(props) {
                 <h4>{result.venue.name}</h4>
                 <p>Category: {result.venue.categories[0].name}</p>
                 <p>Address: {result.venue.location.address}</p>
+                <Button
+                  buttonText="Show on map"
+                  handleClick={() => addMarkers(result)}
+                />
               </div>
             );
           })}

@@ -29,6 +29,8 @@ function HomeContainer({
     height: '90vh',
     zoom: 10,
   });
+  const [tempMarkers, setTempMarkers] = useState([]);
+  const [selectedResult, setSelectedResult] = useState(null);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -61,6 +63,20 @@ function HomeContainer({
     }
   }, [searchResults]);
 
+  useEffect(() => {
+    const listener = e => {
+      if (e.key === 'Escape') {
+        setSelectedResult(null);
+      }
+    };
+    window.addEventListener('keydown', listener);
+
+    // when component unmounts
+    return () => {
+      window.removeEventListener('keydown', listener);
+    };
+  }, []);
+
   const handleSubmit = e => {
     e.preventDefault();
 
@@ -69,6 +85,7 @@ function HomeContainer({
     } else {
       fetchSearchResults(locationInput, queryInput);
     }
+    setTempMarkers([]);
     setViewport({ ...viewport, zoom: 10 });
   };
 
@@ -98,6 +115,14 @@ function HomeContainer({
     setSelectedCategory(option);
   };
 
+  const addMarkers = newMarker => {
+    setTempMarkers([...tempMarkers, newMarker]);
+  };
+
+  const removeMarkers = () => {
+    setTempMarkers([]);
+  };
+
   return (
     <React.Fragment>
       {authState.isAuthenticated && !userInfo && (
@@ -116,6 +141,11 @@ function HomeContainer({
           onCategorySelect={onCategorySelect}
           viewport={viewport}
           setViewport={setViewport}
+          selectedResult={selectedResult}
+          setSelectedResult={setSelectedResult}
+          tempMarkers={tempMarkers}
+          addMarkers={addMarkers}
+          removeMarkers={removeMarkers}
         />
       )}
     </React.Fragment>
