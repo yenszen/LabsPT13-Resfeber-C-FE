@@ -1,0 +1,10 @@
+
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('https://miro.medium.com/max/3332/0*yPSQlTHRvLaIVBcG.jpg');
+    background-size: cover;
+}
