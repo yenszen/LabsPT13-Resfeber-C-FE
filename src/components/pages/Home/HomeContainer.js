@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-
 import RenderHomePage from './RenderHomePage';
-
 import { connect } from 'react-redux';
 import {
   fetchSearchResults,
@@ -19,14 +17,22 @@ function HomeContainer({
   const [userInfo, setUserInfo] = useState(null);
   // eslint-disable-next-line
   const [memoAuthService] = useMemo(() => [authService], []);
-
   const [queryInput, setQueryInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
-  const [coordinates, setCoordinates] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState({
-    value: 'topPicks',
-    label: 'Top Picks',
+    value: '',
+    label: '',
   });
+  const [viewport, setViewport] = useState({
+    latitude: 38.9072,
+    longitude: -77.0369,
+    width: '100%',
+    height: '90vh',
+    zoom: 10,
+  });
+  const [tempMarkers, setTempMarkers] = useState([]);
+  const [selectedResult, setSelectedResult] = useState(null);
+  const [mapView, setMapView] = useState(true);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -47,6 +53,33 @@ function HomeContainer({
     return () => (isSubscribed = false);
   }, [memoAuthService]);
 
+  useEffect(() => {
+    if (searchResults) {
+      const newViewport = {
+        ...viewport,
+        latitude: searchResults[0].venue.location.lat,
+        longitude: searchResults[0].venue.location.lng,
+      };
+
+      setViewport(newViewport);
+    }
+    // eslint-disable-next-line
+  }, [searchResults]);
+
+  useEffect(() => {
+    const listener = e => {
+      if (e.key === 'Escape') {
+        setSelectedResult(null);
+      }
+    };
+    window.addEventListener('keydown', listener);
+
+    // when component unmounts
+    return () => {
+      window.removeEventListener('keydown', listener);
+    };
+  }, []);
+
   const handleSubmit = e => {
     e.preventDefault();
 
@@ -55,6 +88,9 @@ function HomeContainer({
     } else {
       fetchSearchResults(locationInput, queryInput);
     }
+    setTempMarkers([]);
+    setViewport({ ...viewport, zoom: 10 });
+    setMapView(false);
   };
 
   const handleQueryInput = e => {
@@ -65,10 +101,6 @@ function HomeContainer({
   const handleLocationInput = e => {
     const res = e.target.value.split(' ').join('+');
     setLocationInput(res);
-  };
-
-  const onLocationSelect = pair => {
-    setCoordinates(pair);
   };
 
   const dropdownOptions = [
@@ -87,6 +119,18 @@ function HomeContainer({
     setSelectedCategory(option);
   };
 
+  const addMarkers = newMarker => {
+    setTempMarkers([...tempMarkers, newMarker]);
+  };
+
+  const removeMarkers = () => {
+    setTempMarkers([]);
+  };
+
+  const handleMapView = () => {
+    setMapView(!mapView);
+  };
+
   return (
     <React.Fragment>
       {authState.isAuthenticated && !userInfo && (
@@ -100,10 +144,18 @@ function HomeContainer({
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}
           handleLocationInput={e => handleLocationInput(e)}
-          onLocationSelect={onLocationSelect}
           selectedCategory={selectedCategory}
           dropdownOptions={dropdownOptions}
           onCategorySelect={onCategorySelect}
+          viewport={viewport}
+          setViewport={setViewport}
+          selectedResult={selectedResult}
+          setSelectedResult={setSelectedResult}
+          tempMarkers={tempMarkers}
+          addMarkers={addMarkers}
+          removeMarkers={removeMarkers}
+          mapView={mapView}
+          handleMapView={handleMapView}
         />
       )}
     </React.Fragment>
