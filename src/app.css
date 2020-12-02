@@ -1,10 +1,17 @@
-
+@import '~antd/dist/antd.css';
 
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-image: url('https://miro.medium.com/max/3332/0*yPSQlTHRvLaIVBcG.jpg');
-    background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://miro.medium.com/max/3332/0*yPSQlTHRvLaIVBcG.jpg');
+  background-size: cover;
+}
+
+.profile-form {
+  width: 60%;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
 }

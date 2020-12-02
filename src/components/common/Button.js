@@ -9,7 +9,7 @@ const Button = props => {
     <AntButton
       onClick={props.handleClick}
       disabled={props.isDisabled}
-      className={props.classType || 'primary'}
+      type={props.type || 'primary'}
     >
       {props.buttonText}
     </AntButton>
