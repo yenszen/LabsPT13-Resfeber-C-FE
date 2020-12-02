@@ -1,22 +1,36 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Button } from '../../common';
 
-const RenderProfileListPage = props => (
-  <div>
-    <p>
-      <Link to="/">Home</Link>
-    </p>
-    {props.data.map(item => (
-      <figure key={item.id}>
-        <img src={item.avatarUrl} alt={item.name} />
-        <figcaption>
-          <h3>{item.name}</h3>
-        </figcaption>
-      </figure>
-    ))}
-  </div>
-);
+const RenderProfileListPage = props => {
+  const history = useHistory();
+
+  const onEditButtonClick = () => {
+    history.push('/edit-form');
+  };
+
+  return (
+    <div>
+      <p>
+        <Link to="/">Home</Link>
+      </p>
+      <Button
+        type="default"
+        handleClick={onEditButtonClick}
+        buttonText="Edit profile"
+      />
+      {props.data.map(item => (
+        <figure key={item.id}>
+          <img src={item.avatarUrl} alt={item.name} />
+          <figcaption>
+            <h3>{item.name}</h3>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+};
 
 export default RenderProfileListPage;
 
