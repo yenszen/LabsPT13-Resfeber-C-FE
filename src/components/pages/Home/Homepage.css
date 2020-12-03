@@ -24,3 +24,53 @@
 .marker b {
   transform: rotateZ(135deg);
 }
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 20%;
+  background-color: blue;
+}
+
+.home-body {
+  padding: 5%;
+  background-color: rebeccapurple;
+}
+
+.home-body form {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-body form section {
+  display: flex;
+  margin: 5% 0;
+  background-color: rosybrown;
+}
+
+.home-page h1 {
+  font-size: 3.5rem;
+}
+
+.home-page h2 {
+  width: 75%;
+  font-size: 2rem;
+}
+
+.home-logout {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  background-color: rosybrown;
+}
+
+.home-footer {
+  width: 100%;
+  background-color: black;
+  /* position: fixed;
+  bottom: 0; */
+  display: flex;
+  justify-content: space-evenly;
+}

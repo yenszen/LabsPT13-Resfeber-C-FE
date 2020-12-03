@@ -106,7 +106,7 @@ function HomeContainer({
   const dropdownOptions = [
     { value: 'topPicks', label: 'Top Picks' },
     { value: 'food', label: 'Food' },
-    { value: 'drinks', label: 'Drinks' },
+    { value: 'drinks', label: 'Bars' },
     { value: 'coffee', label: 'Coffee' },
     { value: 'shops', label: 'Shops' },
     { value: 'arts', label: 'Arts' },
