@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Map from './Map';
+import Explore from './Explore';
+import { Link, Route } from 'react-router-dom';
 import { FormInput, FormButton } from '../../common';
-import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-import Dropdown from 'react-dropdown';
+// import ReactMapGL, { Marker, Popup } from 'react-map-gl';
+// import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Homepage.css';
 import { Layout, Button } from 'antd';
@@ -32,6 +34,29 @@ function RenderHomePage(props) {
 
   return (
     <Layout className="home-page">
+      <Route path="/">
+        <Explore />
+      </Route>
+      <Route path="/map">
+        <Map
+          handleSubmit={handleSubmit}
+          userInfo={userInfo}
+          searchResults={searchResults}
+          handleQueryInput={handleQueryInput}
+          selectedCategory={selectedCategory}
+          dropdownOptions={dropdownOptions}
+          onCategorySelect={onCategorySelect}
+          viewport={viewport}
+          setViewport={setViewport}
+          selectedResult={selectedResult}
+          setSelectedResult={setSelectedResult}
+          tempMarkers={tempMarkers}
+          addMarkers={addMarkers}
+          removeMarkers={removeMarkers}
+          mapView={mapView}
+          handleMapView={handleMapView}
+        />
+      </Route>
       <Layout className="home-body">
         <h1>Resfeber</h1>
 
@@ -40,8 +65,13 @@ function RenderHomePage(props) {
           <Button handleClick={() => authService.logout()}>Logout</Button>
         </div>
 
+        <section>
+          <Button>Explore</Button>
+          <Button>Plan your trip!</Button>
+        </section>
+
         <form onSubmit={handleSubmit}>
-          <section>
+          {/* <section>
             <Dropdown
               options={dropdownOptions}
               onChange={onCategorySelect}
@@ -54,23 +84,22 @@ function RenderHomePage(props) {
               placeholder="Attractions, Food etc..."
               onChange={handleQueryInput}
             />
-          </section>
+          </section> */}
           <FormInput
-            labelId="Located"
+            labelId=""
             name="Located"
-            placeholder="Near..."
+            placeholder="WHERE TO?"
             onChange={handleLocationInput}
           />
-          <FormButton buttonText="Search" isDisabled={false} />
+          <Button className="explore-button" isDisabled={false}>
+            Explore!
+          </Button>
         </form>
 
-        <Button
-          buttonText={mapView ? 'List View' : 'Map View'}
-          handleClick={handleMapView}
-        />
-        <Button buttonText="Clear map markers" handleClick={removeMarkers} />
+        {/* <Button handleClick={handleMapView}>{mapView ? 'List View' : 'Map View'}</Button>
+        <Button handleClick={removeMarkers}>Clear map markers</Button> */}
 
-        {mapView ? (
+        {/* {mapView ? (
           <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -131,18 +160,33 @@ function RenderHomePage(props) {
               );
             })}
           </React.Fragment>
-        ) : null}
+        ) : null} */}
       </Layout>
       <Footer className="home-footer">
-        <p>
-          <Link to="/profile-list">Profiles Example</Link>
-        </p>
-        <p>
-          <Link to="/example-list">Example List of Items</Link>
-        </p>
-        <p>
-          <Link to="/datavis">Data Visualizations Example</Link>
-        </p>
+        <div>
+          <svg width="50" height="50">
+            <circle cx="80" cy="80" r="50" fill="red" />
+          </svg>
+          <Link to="/profile-list">Data Visualizations Example</Link>
+        </div>
+        <div>
+          <svg width="50" height="50">
+            <circle cx="80" cy="80" r="50" fill="red" />
+          </svg>
+          <Link to="/profile-list">Trips</Link>
+        </div>
+        <div>
+          <svg width="50" height="50">
+            <circle cx="80" cy="80" r="50" fill="red" />
+          </svg>
+          <Link to="/example-list">Pins</Link>
+        </div>
+        <div>
+          <svg width="50" height="50">
+            <circle cx="80" cy="80" r="50" fill="red" />
+          </svg>
+          <Link to="/datavis">Profile</Link>
+        </div>
       </Footer>
     </Layout>
   );
