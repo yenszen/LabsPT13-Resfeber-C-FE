@@ -33,9 +33,7 @@ function RenderHomePage(props) {
   return (
     <Layout className="home-page">
       <Layout className="home-body">
-        <h1>
-          <small>Hi sara welcome to</small>Resfeber
-        </h1>
+        <h1>Resfeber</h1>
 
         <h2>Plan your next road trip!</h2>
         <div className="home-logout">
@@ -141,7 +139,7 @@ function RenderHomePage(props) {
           </React.Fragment>
         ) : null}
       </Layout>
-      <p>{userInfo.name}</p>
+      <p>Hi {userInfo.name} Welcome to Resfeber</p>
       <Footer className="home-footer">
         <div>
           <svg width="50" height="50">
