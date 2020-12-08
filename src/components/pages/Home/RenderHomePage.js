@@ -33,7 +33,9 @@ function RenderHomePage(props) {
   return (
     <Layout className="home-page">
       <Layout className="home-body">
-        <h1>Resfeber</h1>
+        <h1>
+          <small>Hi sara welcome to</small>Resfeber
+        </h1>
 
         <h2>Plan your next road trip!</h2>
         <div className="home-logout">
@@ -99,9 +101,7 @@ function RenderHomePage(props) {
                         setSelectedResult(result);
                       }}
                       className="marker"
-                    >
-                      <span></span>
-                    </div>
+                    ></div>
                   </Marker>
                 ))}
               </React.Fragment>

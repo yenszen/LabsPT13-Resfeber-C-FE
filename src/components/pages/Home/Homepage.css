@@ -118,3 +118,7 @@ a {
   background-color: blue;
   color: white;
 }
+
+small {
+  font-size: 0.04rem;
+}
