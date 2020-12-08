@@ -141,6 +141,7 @@ function RenderHomePage(props) {
           </React.Fragment>
         ) : null}
       </Layout>
+      <p>{userInfo.name}</p>
       <Footer className="home-footer">
         <div>
           <svg width="50" height="50">

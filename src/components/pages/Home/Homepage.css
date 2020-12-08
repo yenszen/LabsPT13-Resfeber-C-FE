@@ -1,4 +1,4 @@
-/* .marker {
+.marker {
   width: 0;
   height: 0;
   background: #d3d3d3;
@@ -23,7 +23,7 @@
 
 .marker b {
   transform: rotateZ(135deg);
-} */
+}
 
 .home-page {
   min-height: 100vh;
