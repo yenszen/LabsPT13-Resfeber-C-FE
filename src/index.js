@@ -26,6 +26,7 @@ import { LoginPage } from './components/pages/Login';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
 import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
+import { MapPage } from './components/pages/Map';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -63,7 +64,7 @@ function App() {
           component={() => <HomePage LoadingComponent={LoadingComponent} />}
         />
 
-        <SecureRoute path="/map" component={ExampleListPage} />
+        <SecureRoute path="/map" component={MapPage} />
 
         <SecureRoute path="/example-list" component={ExampleListPage} />
 

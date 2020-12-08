@@ -1,13 +1,11 @@
 import React from 'react';
-import Map from './Map';
-import Explore from './Explore';
-import { Link, Route } from 'react-router-dom';
-import { FormInput, FormButton } from '../../common';
-// import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-// import Dropdown from 'react-dropdown';
+import { Link } from 'react-router-dom';
+import { Button, FormInput, FormButton } from '../../common';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
+import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Homepage.css';
-import { Layout, Button } from 'antd';
+import { Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 function RenderHomePage(props) {
@@ -34,44 +32,24 @@ function RenderHomePage(props) {
 
   return (
     <Layout className="home-page">
-      <Route path="/">
-        <Explore />
-      </Route>
-      <Route path="/map">
-        <Map
-          handleSubmit={handleSubmit}
-          userInfo={userInfo}
-          searchResults={searchResults}
-          handleQueryInput={handleQueryInput}
-          selectedCategory={selectedCategory}
-          dropdownOptions={dropdownOptions}
-          onCategorySelect={onCategorySelect}
-          viewport={viewport}
-          setViewport={setViewport}
-          selectedResult={selectedResult}
-          setSelectedResult={setSelectedResult}
-          tempMarkers={tempMarkers}
-          addMarkers={addMarkers}
-          removeMarkers={removeMarkers}
-          mapView={mapView}
-          handleMapView={handleMapView}
-        />
-      </Route>
       <Layout className="home-body">
         <h1>Resfeber</h1>
 
         <h2>Plan your next road trip!</h2>
         <div className="home-logout">
-          <Button handleClick={() => authService.logout()}>Logout</Button>
+          <Button
+            handleClick={() => authService.logout()}
+            buttonText="Logout"
+          />
         </div>
 
         <section>
-          <Button>Explore</Button>
-          <Button>Plan your trip!</Button>
+          <Button buttonText="Explore" />
+          <Button buttonText="Plan your trip!" />
         </section>
 
         <form onSubmit={handleSubmit}>
-          {/* <section>
+          <section>
             <Dropdown
               options={dropdownOptions}
               onChange={onCategorySelect}
@@ -84,22 +62,23 @@ function RenderHomePage(props) {
               placeholder="Attractions, Food etc..."
               onChange={handleQueryInput}
             />
-          </section> */}
+          </section>
           <FormInput
             labelId=""
             name="Located"
             placeholder="WHERE TO?"
             onChange={handleLocationInput}
           />
-          <Button className="explore-button" isDisabled={false}>
-            Explore!
-          </Button>
+          <FormButton buttonText="Explore!" isDisabled={false} />
         </form>
 
-        {/* <Button handleClick={handleMapView}>{mapView ? 'List View' : 'Map View'}</Button>
-        <Button handleClick={removeMarkers}>Clear map markers</Button> */}
+        <Button
+          buttonText={mapView ? 'List View' : 'Map View'}
+          handleClick={handleMapView}
+        />
+        <Button buttonText="Clear map markers" handleClick={removeMarkers} />
 
-        {/* {mapView ? (
+        {mapView ? (
           <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -160,7 +139,7 @@ function RenderHomePage(props) {
               );
             })}
           </React.Fragment>
-        ) : null} */}
+        ) : null}
       </Layout>
       <Footer className="home-footer">
         <div>

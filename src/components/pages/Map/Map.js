@@ -26,38 +26,7 @@ function MapPage(props) {
   } = props;
 
   return (
-    <Layout className="home-map">
-      <form onSubmit={handleSubmit}>
-        <section>
-          <Dropdown
-            options={dropdownOptions}
-            onChange={onCategorySelect}
-            value={selectedCategory ? selectedCategory.label : null}
-            placeholder="Select a category"
-          />
-          <FormInput
-            labelId="Search"
-            name="Search"
-            placeholder="Attractions, Food etc..."
-            onChange={handleQueryInput}
-          />
-        </section>
-        <FormInput
-          labelId=""
-          name="Located"
-          placeholder="WHERE TO?"
-          onChange={handleLocationInput}
-        />
-        <Button className="explore-button" isDisabled={false}>
-          Explore!
-        </Button>
-      </form>
-
-      <Button handleClick={handleMapView}>
-        {mapView ? 'List View' : 'Map View'}
-      </Button>
-      <Button handleClick={removeMarkers}>Clear map markers</Button>
-
+    <Layout className="map">
       {mapView ? (
         <ReactMapGL
           {...viewport}
@@ -120,6 +89,37 @@ function MapPage(props) {
           })}
         </React.Fragment>
       ) : null}
+
+      <form onSubmit={handleSubmit}>
+        <section>
+          <Dropdown
+            options={dropdownOptions}
+            onChange={onCategorySelect}
+            value={selectedCategory ? selectedCategory.label : null}
+            placeholder="Select a category"
+          />
+          <FormInput
+            labelId="Search"
+            name="Search"
+            placeholder="Attractions, Food etc..."
+            onChange={handleQueryInput}
+          />
+        </section>
+        <FormInput
+          labelId=""
+          name="Located"
+          placeholder="WHERE TO?"
+          onChange={handleLocationInput}
+        />
+        <Button className="explore-button" isDisabled={false}>
+          Explore!
+        </Button>
+      </form>
+
+      <Button handleClick={handleMapView}>
+        {mapView ? 'List View' : 'Map View'}
+      </Button>
+      <Button handleClick={removeMarkers}>Clear map markers</Button>
     </Layout>
   );
 }
