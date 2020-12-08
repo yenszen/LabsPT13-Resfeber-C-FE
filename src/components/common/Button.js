@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button as AntButton } from 'antd';
 
 const Button = props => {
   // Here is a button for use when simply in need of a button that doesn't require to be wrapped in a form.
   // contains a click property for your use onClick
   return (
-    <button
+    <AntButton
       onClick={props.handleClick}
       disabled={props.isDisabled}
-      className={props.classType || 'primary'}
+      type={props.type || 'primary'}
     >
       {props.buttonText}
-    </button>
+    </AntButton>
   );
 };
 
@@ -19,7 +20,7 @@ export default Button;
 
 Button.propTypes = {
   buttonText: PropTypes.string.isRequired,
-  classType: PropTypes.string,
+  type: PropTypes.string,
   disabled: PropTypes.string,
   handleClick: PropTypes.func,
 };
