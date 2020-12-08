@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import RenderHomePage from './RenderHomePage';
+import RenderMapPage from './RenderMapPage';
 import { connect } from 'react-redux';
 import {
   fetchSearchResults,
   fetchCategoryResults,
 } from '../../../state/actions/index';
 
-function HomeContainer({
+function MapContainer({
   LoadingComponent,
   fetchSearchResults,
   fetchCategoryResults,
@@ -133,31 +133,26 @@ function HomeContainer({
 
   return (
     <React.Fragment>
-      {authState.isAuthenticated && !userInfo && (
-        <LoadingComponent message="Fetching user profile..." />
-      )}
-      {authState.isAuthenticated && userInfo && (
-        <RenderHomePage
-          userInfo={userInfo}
-          authService={authService}
-          searchResults={searchResults}
-          handleSubmit={handleSubmit}
-          handleQueryInput={e => handleQueryInput(e)}
-          handleLocationInput={e => handleLocationInput(e)}
-          selectedCategory={selectedCategory}
-          dropdownOptions={dropdownOptions}
-          onCategorySelect={onCategorySelect}
-          viewport={viewport}
-          setViewport={setViewport}
-          selectedResult={selectedResult}
-          setSelectedResult={setSelectedResult}
-          tempMarkers={tempMarkers}
-          addMarkers={addMarkers}
-          removeMarkers={removeMarkers}
-          mapView={mapView}
-          handleMapView={handleMapView}
-        />
-      )}
+      <RenderMapPage
+        userInfo={userInfo}
+        authService={authService}
+        searchResults={searchResults}
+        handleSubmit={handleSubmit}
+        handleQueryInput={e => handleQueryInput(e)}
+        handleLocationInput={e => handleLocationInput(e)}
+        selectedCategory={selectedCategory}
+        dropdownOptions={dropdownOptions}
+        onCategorySelect={onCategorySelect}
+        viewport={viewport}
+        setViewport={setViewport}
+        selectedResult={selectedResult}
+        setSelectedResult={setSelectedResult}
+        tempMarkers={tempMarkers}
+        addMarkers={addMarkers}
+        removeMarkers={removeMarkers}
+        mapView={mapView}
+        handleMapView={handleMapView}
+      />
     </React.Fragment>
   );
 }
@@ -171,4 +166,4 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   fetchSearchResults,
   fetchCategoryResults,
-})(HomeContainer);
+})(MapContainer);
