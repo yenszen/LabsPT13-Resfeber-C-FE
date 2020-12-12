@@ -1,0 +1,18 @@
+.header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.header h1 {
+  color: white;
+  font-size: x-large;
+}
+
+.nav-links div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
