@@ -25,96 +25,76 @@
   transform: rotateZ(135deg);
 }
 
-.home-page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-top: 20%;
-  background-color: white;
-  
-}
-
 .home-body {
-  padding: 5%;
   background-color: white;
-}
-
-.home-body form {
-  display: flex;
-  flex-direction: column;
-  margin: 5% 0;
-}
-
-.home-body section {
-  width: 100;
-  margin: 5% 0;
-  border: 1px solid #222;
-}
-
-.home-body section button {
-  width: 50%;
-  border: 1px solid #222;
-}
-
-.home-body section button:first-of-type {
-  color: white;
-  background-color: #222;
-  border: 1px solid #222;
-}
-
-.home-body form section {
-  display: flex;
-  margin: 5% 0;
-  background-color: white;
-}
-
-.home-body form section:first-child {
-  width: 100;
-}
-
-.home-body form section:last-child {
-  width: 100;
-}
-
-.home-page h1 {
-  font-size: 3.5rem;
+  padding-top: 1rem;
 }
 
 .home-page h2 {
-  width: 75%;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
-.home-logout {
-  position: absolute;
-  top: 2%;
-  right: 2%;
-  background-color: white;
-}
-
-.home-footer {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  background-color: white;
-  border-top: 1px solid black;
-}
-
-.home-footer div {
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.home-page h3 {
+  font-size: 1.1rem;
 }
 
 a {
   color: black;
 }
 
-.explore-button {
-  margin: 5% 0;
-  border-radius: 10px;
-  background-color: blue;
+.home-body form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-body form section {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.home-body form input {
+  height: 2.5rem;
+}
+
+.home-body section {
+  width: 75%;
+  margin: 1rem auto;
+}
+
+.home-body section button {
+  width: 50%;
+  border: 1px solid #222;
+  padding: 0;
+}
+
+.home-body section button:first-of-type {
   color: white;
+  background-color: #222;
+}
+
+.search-results {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+
+.result-card {
+  width: 90%;
+  margin: 1rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+@media only screen and (min-width: 600px) {
+  .result-card {
+    width: 40%;
+  }
 }
