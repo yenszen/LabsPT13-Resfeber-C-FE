@@ -21,12 +21,11 @@ import './app.css';
 import { NotFoundPage } from './components/pages/NotFound';
 import { ExampleListPage } from './components/pages/ExampleList';
 import { HomePage } from './components/pages/Home';
-import { ProfileListPage } from './components/pages/ProfileList';
+import { ProfileListPage, ProfileForm } from './components/pages/ProfileList';
 import { LoginPage } from './components/pages/Login';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
 import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
-import { MapPage } from './components/pages/Map';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -63,12 +62,9 @@ function App() {
           exact
           component={() => <HomePage LoadingComponent={LoadingComponent} />}
         />
-
-        <SecureRoute path="/map" component={MapPage} />
-
         <SecureRoute path="/example-list" component={ExampleListPage} />
-
         <SecureRoute path="/profile-list" component={ProfileListPage} />
+        <SecureRoute path="/edit-form" component={ProfileForm} />
         <SecureRoute path="/datavis" component={ExampleDataViz} />
         <Route component={NotFoundPage} />
       </Switch>
