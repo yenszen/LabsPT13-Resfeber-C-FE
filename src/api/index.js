@@ -49,4 +49,18 @@ const getProfileData = authState => {
   }
 };
 
-export { sleep, getExampleData, getProfileData, getDSData };
+const getTestProfileData = () => {
+  try {
+    return axios
+      .get('https://my-json-server.typicode.com/yenszen/database/profile')
+      .then(res => {
+        console.log('test profile data', res.data);
+        return res.data;
+      });
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+export { sleep, getExampleData, getProfileData, getDSData, getTestProfileData };
