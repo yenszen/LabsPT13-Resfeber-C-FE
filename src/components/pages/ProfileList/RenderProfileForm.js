@@ -33,7 +33,8 @@ function RenderProfileForm({
           name: Yup.string()
             .required('Name required')
             .min(3, 'Must be at least 3 characters')
-            .max(15, 'Must be 15 characters or less'),
+            .max(15, 'Must be 15 characters or less')
+            .matches(/^[A-Za-z ]+$/),
           status: Yup.string()
             .required('Status required')
             .oneOf(['single', 'couple', 'family'], 'Invalid status'),
