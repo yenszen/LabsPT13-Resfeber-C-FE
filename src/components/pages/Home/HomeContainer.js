@@ -6,8 +6,6 @@ import {
   fetchSearchResults,
   fetchCategoryResults,
 } from '../../../state/actions/index';
-import { Link } from 'react-router-dom';
-import { Menu } from 'antd';
 
 function HomeContainer({
   LoadingComponent,

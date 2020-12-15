@@ -12,7 +12,6 @@ import './Navbar.css';
 import {
   Menu as MenuIcon,
   Home,
-  Search,
   MapPin,
   User,
   LogOut as LogoutIcon,
@@ -92,11 +91,6 @@ function Navbar() {
     <Layout>
       <Header className="header">
         <h1>Resfeber</h1>
-        {/* <Button
-          handleClick={() => authService.logout()}
-          buttonText="Logout"
-          type="default"
-        /> */}
         <Space direction="vertical">
           <Space wrap="true">
             <AntDropdown overlay={menu} placement="bottomLeft">

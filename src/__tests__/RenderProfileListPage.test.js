@@ -1,15 +1,39 @@
 import React from 'react';
 import RenderProfileListPage from '../components/pages/ProfileList/RenderProfileListPage';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-test('loads a profile list', () => {
-  const data = [{ id: '1234', name: 'item' }];
-  const { getByText, debug } = render(
+afterEach(cleanup);
+
+jest.mock('@okta/okta-react', () => ({
+  useOktaAuth: () => {
+    return {
+      authState: {
+        isAuthenticated: true,
+      },
+      authService: {
+        getUser: () => Promise.resolve({ name: 'sara' }),
+      },
+    };
+  },
+}));
+
+test('loads profile information', () => {
+  const data = {
+    id: '1',
+    username: 'John Wick',
+    status: 'Single',
+    address_1: 'The Continental',
+    address_2: 'Fictional',
+    carType: 'Sedan',
+    budget: 1000,
+    accommodationType: 'Entire Place',
+  };
+  const { getByText } = render(
     <Router>
       <RenderProfileListPage data={data} />
     </Router>
   );
-  const element = getByText(/item/i);
-  expect(element.textContent).toBe(data[0].name);
+  const element = getByText(/john wick/i);
+  expect(element).toBeInTheDocument();
 });

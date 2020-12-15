@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, FormInput, FormButton, Navbar } from '../../common';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import Dropdown from 'react-dropdown';
@@ -60,7 +59,6 @@ function RenderHomePage(props) {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                {/* empties search query whenever category browsing chosen to prevent API issue */}
                 <Dropdown
                   options={dropdownOptions}
                   onChange={onCategorySelect}
