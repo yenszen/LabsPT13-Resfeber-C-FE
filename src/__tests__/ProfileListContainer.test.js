@@ -9,7 +9,7 @@ afterEach(cleanup);
 //   return { getProfileData: () => Promise.resolve([]) };
 // });
 jest.mock('../api', () => {
-  return { getTestProfileData: () => Promise.resolve([]) };
+  return { getTestProfileData: () => Promise.resolve({}) };
 });
 
 jest.mock('@okta/okta-react', () => ({
