@@ -1,17 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, FormInput, FormButton } from '../../common';
+import { Button, FormInput, FormButton, Navbar } from '../../common';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Homepage.css';
 import { Layout } from 'antd';
-const { Header, Footer, Sider, Content } = Layout;
+
+const { Content } = Layout;
 
 function RenderHomePage(props) {
   const {
     userInfo,
-    authService,
     searchResults,
     handleSubmit,
     handleQueryInput,
@@ -28,55 +27,73 @@ function RenderHomePage(props) {
     removeMarkers,
     mapView,
     handleMapView,
+    manual,
+    setManual,
   } = props;
 
   return (
-    <Layout className="home-page">
-      <Layout className="home-body">
-        <h1>Resfeber</h1>
+    <Layout>
+      <Navbar />
 
-        <h2>Plan your next road trip!</h2>
-        <div className="home-logout">
-          <Button
-            handleClick={() => authService.logout()}
-            buttonText="Logout"
-          />
+      <Content className="home-body">
+        <div style={{ textAlign: 'center' }}>
+          <h2>Welcome {userInfo.name}.</h2>
+          <h3>Let's plan your next road trip!</h3>
         </div>
 
-        <section>
-          <Button buttonText="Explore" />
-          <Button buttonText="Plan your trip!" />
-        </section>
-
         <form onSubmit={handleSubmit}>
+          <Button
+            buttonText={manual ? 'Browse By Categories' : 'Browse Manually'}
+            handleClick={() => setManual(!manual)}
+            type="ghost"
+          />
           <section>
-            <Dropdown
-              options={dropdownOptions}
-              onChange={onCategorySelect}
-              value={selectedCategory ? selectedCategory.label : null}
-              placeholder="Select a category"
-            />
+            {manual ? (
+              <React.Fragment>
+                <FormInput
+                  labelId=""
+                  name="Search"
+                  placeholder="Attractions, Food etc..."
+                  onChange={handleQueryInput}
+                />
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Dropdown
+                  options={dropdownOptions}
+                  onChange={onCategorySelect}
+                  value={selectedCategory ? selectedCategory.label : null}
+                  placeholder="Select a category"
+                />
+              </React.Fragment>
+            )}
             <FormInput
-              labelId="Search"
-              name="Search"
-              placeholder="Attractions, Food etc..."
-              onChange={handleQueryInput}
+              labelId=""
+              name="Located"
+              placeholder="WHERE TO?"
+              onChange={handleLocationInput}
             />
           </section>
-          <FormInput
-            labelId=""
-            name="Located"
-            placeholder="WHERE TO?"
-            onChange={handleLocationInput}
+
+          <FormButton
+            buttonText="Explore!"
+            isDisabled={false}
+            htmlType="submit"
           />
-          <FormButton buttonText="Explore!" isDisabled={false} />
         </form>
 
-        <Button
-          buttonText={mapView ? 'List View' : 'Map View'}
-          handleClick={handleMapView}
-        />
-        <Button buttonText="Clear map markers" handleClick={removeMarkers} />
+        <section>
+          <Button
+            buttonText={mapView ? 'Explore Destinations' : 'Explore Map'}
+            handleClick={handleMapView}
+            style={{ background: 'black', color: 'white' }}
+          />
+          <Button
+            buttonText="Clear Markers"
+            handleClick={removeMarkers}
+            type="default"
+          />
+        </section>
 
         {mapView ? (
           <ReactMapGL
@@ -99,7 +116,9 @@ function RenderHomePage(props) {
                         setSelectedResult(result);
                       }}
                       className="marker"
-                    ></div>
+                    >
+                      <span></span>
+                    </div>
                   </Marker>
                 ))}
               </React.Fragment>
@@ -123,49 +142,24 @@ function RenderHomePage(props) {
 
         {searchResults && !mapView ? (
           <React.Fragment>
-            {searchResults.map(result => {
-              return (
-                <div key={result.venue.id}>
-                  <h4>{result.venue.name}</h4>
-                  <p>Category: {result.venue.categories[0].name}</p>
-                  <p>Address: {result.venue.location.address}</p>
-                  <Button
-                    buttonText="Show on map"
-                    handleClick={() => addMarkers(result)}
-                  />
-                </div>
-              );
-            })}
+            <div className="search-results">
+              {searchResults.map(result => {
+                return (
+                  <div key={result.venue.id} className="result-card">
+                    <h4>{result.venue.name}</h4>
+                    <p>Category: {result.venue.categories[0].name}</p>
+                    <p>Address: {result.venue.location.address}</p>
+                    <Button
+                      buttonText="Show on map"
+                      handleClick={() => addMarkers(result)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </React.Fragment>
         ) : null}
-      </Layout>
-      <p>Hi {userInfo.name} Welcome to Resfeber</p>
-      <Footer className="home-footer">
-        <div>
-          <svg width="50" height="50">
-            <circle cx="80" cy="80" r="50" fill="red" />
-          </svg>
-          <Link to="/profile-list">Data Visualizations Example</Link>
-        </div>
-        <div>
-          <svg width="50" height="50">
-            <circle cx="80" cy="80" r="50" fill="red" />
-          </svg>
-          <Link to="/profile-list">Trips</Link>
-        </div>
-        <div>
-          <svg width="50" height="50">
-            <circle cx="80" cy="80" r="50" fill="red" />
-          </svg>
-          <Link to="/example-list">Pins</Link>
-        </div>
-        <div>
-          <svg width="50" height="50">
-            <circle cx="80" cy="80" r="50" fill="red" />
-          </svg>
-          <Link to="/datavis">Profile</Link>
-        </div>
-      </Footer>
+      </Content>
     </Layout>
   );
 }

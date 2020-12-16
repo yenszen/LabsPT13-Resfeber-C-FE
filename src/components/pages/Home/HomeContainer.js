@@ -34,6 +34,9 @@ function HomeContainer({
   const [selectedResult, setSelectedResult] = useState(null);
   const [mapView, setMapView] = useState(true);
 
+  // let users choose to browse between categories and manual query
+  const [manual, setManual] = useState(false);
+
   useEffect(() => {
     let isSubscribed = true;
 
@@ -79,6 +82,11 @@ function HomeContainer({
       window.removeEventListener('keydown', listener);
     };
   }, []);
+
+  // clears manual search query upon manual state change
+  useEffect(() => {
+    setQueryInput('');
+  }, [manual]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -139,7 +147,6 @@ function HomeContainer({
       {authState.isAuthenticated && userInfo && (
         <RenderHomePage
           userInfo={userInfo}
-          authService={authService}
           searchResults={searchResults}
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}
@@ -156,6 +163,8 @@ function HomeContainer({
           removeMarkers={removeMarkers}
           mapView={mapView}
           handleMapView={handleMapView}
+          manual={manual}
+          setManual={setManual}
         />
       )}
     </React.Fragment>
