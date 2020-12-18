@@ -1,0 +1,14 @@
+.trips {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trip-card {
+  background-color: lightgrey;
+  width: 50%;
+  margin: 1rem;
+  text-align: center;
+}
