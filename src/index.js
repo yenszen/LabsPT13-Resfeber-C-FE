@@ -26,6 +26,7 @@ import { LoginPage } from './components/pages/Login';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
 import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
+import { TripsList, Itinerary } from './components/pages/Trips';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -66,6 +67,11 @@ function App() {
         <SecureRoute path="/profile-list" component={ProfileListPage} />
         <SecureRoute path="/edit-form" component={ProfileForm} />
         <SecureRoute path="/datavis" component={ExampleDataViz} />
+        <SecureRoute path="/trips" component={TripsList} />
+        <SecureRoute
+          path="/itinerary/:id"
+          render={renderProps => <Itinerary {...renderProps} />}
+        />
         <Route component={NotFoundPage} />
       </Switch>
     </Security>
