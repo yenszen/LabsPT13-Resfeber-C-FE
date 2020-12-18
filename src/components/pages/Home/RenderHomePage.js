@@ -4,7 +4,7 @@ import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Homepage.css';
-import { Layout } from 'antd';
+import { Layout, Modal } from 'antd';
 
 const { Content } = Layout;
 
@@ -29,6 +29,15 @@ function RenderHomePage(props) {
     handleMapView,
     manual,
     setManual,
+    isModalVisible,
+    showModal,
+    handleOk,
+    handleCancel,
+    myTrips,
+    addToTrip,
+    createNewTrip,
+    tripId,
+    handleTripId,
   } = props;
 
   return (
@@ -143,7 +152,7 @@ function RenderHomePage(props) {
         {searchResults && !mapView ? (
           <React.Fragment>
             <div className="search-results">
-              {searchResults.map(result => {
+              {searchResults.map((result, index) => {
                 return (
                   <div key={result.venue.id} className="result-card">
                     <h4>{result.venue.name}</h4>
@@ -153,9 +162,101 @@ function RenderHomePage(props) {
                       buttonText="Show on map"
                       handleClick={() => addMarkers(result)}
                     />
+                    <Button
+                      buttonText="Add to Trip"
+                      handleClick={() => {
+                        showModal();
+                        handleTripId(index);
+                      }}
+                    />
                   </div>
                 );
               })}
+              <Modal
+                title="Add to a Trip"
+                visible={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+              >
+                {myTrips.length > 0 ? (
+                  <div>
+                    {myTrips.map((trip, index) => (
+                      <div
+                        key={index}
+                        onClick={() =>
+                          addToTrip(trip.id, {
+                            itinerary: [
+                              ...trip.itinerary,
+                              {
+                                name: searchResults[tripId].venue.name,
+                                category:
+                                  searchResults[tripId].venue.categories[0]
+                                    .name,
+                                address:
+                                  searchResults[tripId].venue.location.address,
+                                lat: searchResults[tripId].venue.location.lat,
+                                lng: searchResults[tripId].venue.location.lng,
+                                city: searchResults[tripId].venue.location.city,
+                                state:
+                                  searchResults[tripId].venue.location.state,
+                              },
+                            ],
+                          })
+                        }
+                      >
+                        {trip.tripName}
+                      </div>
+                    ))}
+                    <div
+                      style={{ backgroundColor: 'lightblue' }}
+                      onClick={() =>
+                        createNewTrip({
+                          tripName: `New trip ${myTrips.length + 1}`,
+                          itinerary: [
+                            {
+                              name: searchResults[tripId].venue.name,
+                              category:
+                                searchResults[tripId].venue.categories[0].name,
+                              address:
+                                searchResults[tripId].venue.location.address,
+                              lat: searchResults[tripId].venue.location.lat,
+                              lng: searchResults[tripId].venue.location.lng,
+                              city: searchResults[tripId].venue.location.city,
+                              state: searchResults[tripId].venue.location.state,
+                            },
+                          ],
+                        })
+                      }
+                    >
+                      <h3>Create new trip</h3>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{ backgroundColor: 'lightblue' }}
+                    onClick={() =>
+                      createNewTrip({
+                        tripName: `New trip ${myTrips.length + 1}`,
+                        itinerary: [
+                          {
+                            name: searchResults[tripId].venue.name,
+                            category:
+                              searchResults[tripId].venue.categories[0].name,
+                            address:
+                              searchResults[tripId].venue.location.address,
+                            lat: searchResults[tripId].venue.location.lat,
+                            lng: searchResults[tripId].venue.location.lng,
+                            city: searchResults[tripId].venue.location.city,
+                            state: searchResults[tripId].venue.location.state,
+                          },
+                        ],
+                      })
+                    }
+                  >
+                    <h3>Create new trip</h3>
+                  </div>
+                )}
+              </Modal>
             </div>
           </React.Fragment>
         ) : null}

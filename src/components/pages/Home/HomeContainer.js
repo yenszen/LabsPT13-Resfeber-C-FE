@@ -6,6 +6,7 @@ import {
   fetchSearchResults,
   fetchCategoryResults,
 } from '../../../state/actions/index';
+import { getMyTrips, addToTrip, createNewTrip } from '../../../api';
 
 function HomeContainer({
   LoadingComponent,
@@ -36,6 +37,19 @@ function HomeContainer({
 
   // let users choose to browse between categories and manual query
   const [manual, setManual] = useState(false);
+
+  // everything that handles addToTrip modal
+  const [myTrips, setMyTrips] = useState([]);
+  const [tripId, setTripId] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = () => setIsModalVisible(true);
+  const handleOk = () => setIsModalVisible(false);
+  const handleCancel = () => setIsModalVisible(false);
+  const handleTripId = id => setTripId(id);
+
+  useEffect(() => {
+    getMyTrips().then(data => setMyTrips(data));
+  }, []);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -165,6 +179,15 @@ function HomeContainer({
           handleMapView={handleMapView}
           manual={manual}
           setManual={setManual}
+          isModalVisible={isModalVisible}
+          showModal={showModal}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          myTrips={myTrips}
+          addToTrip={addToTrip}
+          createNewTrip={createNewTrip}
+          tripId={tripId}
+          handleTripId={handleTripId}
         />
       )}
     </React.Fragment>
