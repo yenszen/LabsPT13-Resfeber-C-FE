@@ -61,6 +61,17 @@ const getTestProfileData = () => {
   }
 };
 
+const editProfile = data => {
+  try {
+    return axios.put('http://localhost:3001/profile', data).then(res => {
+      console.log('editProfile', res.data);
+    });
+  } catch (error) {
+    console.log('editProfile', error);
+    return [];
+  }
+};
+
 // ALL TRIPS API CALLS RESIDE BELOW
 const getMyTrips = () => {
   try {
@@ -98,13 +109,26 @@ const addToTrip = (tripId, data) => {
   }
 };
 
+const removeTrip = tripId => {
+  try {
+    return axios
+      .delete(`http://localhost:3001/myTrips/${tripId}`)
+      .then(res => console.log('removeTrip', res.data));
+  } catch (error) {
+    console.log('removeTrip', error);
+    return [];
+  }
+};
+
 export {
   sleep,
   getExampleData,
   getProfileData,
   getDSData,
   getTestProfileData,
+  editProfile,
   getMyTrips,
   createNewTrip,
   addToTrip,
+  removeTrip,
 };
