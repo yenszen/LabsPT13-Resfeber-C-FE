@@ -49,7 +49,7 @@ function HomeContainer({
 
   useEffect(() => {
     getMyTrips().then(data => setMyTrips(data));
-  }, []);
+  }, [myTrips]);
 
   useEffect(() => {
     let isSubscribed = true;
