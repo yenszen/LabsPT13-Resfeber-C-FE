@@ -9,10 +9,11 @@ function RenderProfileForm({
   CustomStatusSelect,
   CustomVehicleSelect,
   CustomAccommodationSelect,
+  editProfile,
 }) {
   const history = useHistory();
 
-  const onCancelClick = () => {
+  const onReturnToPage = () => {
     history.push('/profile-list');
   };
 
@@ -21,16 +22,16 @@ function RenderProfileForm({
       <Navbar />
       <Formik
         initialValues={{
-          name: '',
+          user_name: '',
           status: '',
           address_1: '',
           address_2: '',
           carType: '',
-          preferredBudget: '',
+          budget: '',
           accommodationType: '',
         }}
         validationSchema={Yup.object({
-          name: Yup.string()
+          user_name: Yup.string()
             .required('Name required')
             .min(3, 'Must be at least 3 characters')
             .max(15, 'Must be 15 characters or less')
@@ -48,7 +49,7 @@ function RenderProfileForm({
               ['hatchback', 'sedan', 'suv', 'minivan', 'truck', 'other'],
               'Invalid car type'
             ),
-          preferredBudget: Yup.number()
+          budget: Yup.number()
             .required('Preferred budget information required')
             .positive()
             .integer(),
@@ -60,11 +61,12 @@ function RenderProfileForm({
             ),
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
+          editProfile(values);
+          resetForm();
+          setSubmitting(false);
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            resetForm();
-            setSubmitting(false);
-          }, 2000);
+            onReturnToPage();
+          }, 1000);
         }}
       >
         {props => (
@@ -72,7 +74,7 @@ function RenderProfileForm({
             <h2>Edit profile</h2>
             <CustomTextInput
               label="Name"
-              name="name"
+              name="user_name"
               type="text"
               placeholder="John Doe"
             />
@@ -100,7 +102,7 @@ function RenderProfileForm({
             />
             <CustomTextInput
               label="Preferred Budget"
-              name="preferredBudget"
+              name="budget"
               type="number"
               placeholder="1000"
             />
@@ -126,7 +128,7 @@ function RenderProfileForm({
               <Button
                 type="danger"
                 buttonText="Cancel"
-                handleClick={onCancelClick}
+                handleClick={onReturnToPage}
               />
             </div>
           </Form>

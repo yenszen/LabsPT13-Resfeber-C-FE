@@ -21,7 +21,7 @@ jest.mock('@okta/okta-react', () => ({
 test('loads profile information', () => {
   const data = {
     id: '1',
-    username: 'John Wick',
+    user_name: 'John Wick',
     status: 'Single',
     address_1: 'The Continental',
     address_2: 'Fictional',

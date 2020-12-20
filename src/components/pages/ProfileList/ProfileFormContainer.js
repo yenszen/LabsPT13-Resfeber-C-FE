@@ -2,6 +2,7 @@ import React from 'react';
 import RenderProfileForm from './RenderProfileForm';
 import { useField } from 'formik';
 import { Form, Input, Select, Alert } from 'antd';
+import { editProfile } from '../../../api';
 
 function ProfileFormContainer() {
   const FormItem = Form.Item;
@@ -88,6 +89,7 @@ function ProfileFormContainer() {
         CustomStatusSelect={CustomStatusSelect}
         CustomVehicleSelect={CustomVehicleSelect}
         CustomAccommodationSelect={CustomAccommodationSelect}
+        editProfile={editProfile}
       />
     </React.Fragment>
   );

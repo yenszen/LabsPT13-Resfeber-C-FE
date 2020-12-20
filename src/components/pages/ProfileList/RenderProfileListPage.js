@@ -19,7 +19,7 @@ const RenderProfileListPage = ({ data }) => {
         buttonText="Edit Profile"
       />
       <div>
-        <h2>{data.username}</h2>
+        <h2>{data.user_name}</h2>
         <p>{data.status}</p>
         <p>{data.address_1}</p>
         <p>{data.address_2}</p>
@@ -39,7 +39,7 @@ RenderProfileListPage.propTypes = {
   data: PropTypes.shape({
     // Here we require an id of type number or string to prevent a "unique key prop" warning
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    username: PropTypes.string,
+    user_name: PropTypes.string,
     status: PropTypes.string,
     address_1: PropTypes.string,
     address_2: PropTypes.string,
