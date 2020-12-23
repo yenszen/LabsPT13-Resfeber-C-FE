@@ -48,7 +48,7 @@ function Navbar() {
       </Menu.Item>
       <Menu.Item>
         <div className="nav-links">
-          <Link to="/example-list">
+          <Link to="/pins">
             <div>
               <MapPin />
               <p>Pins</p>
@@ -68,7 +68,7 @@ function Navbar() {
       </Menu.Item>
       <Menu.Item>
         <div className="nav-links">
-          <Link to="/profile-list">
+          <Link to="/profile">
             <div>
               <User />
               <p>Profile</p>

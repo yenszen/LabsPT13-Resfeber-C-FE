@@ -14,7 +14,7 @@ function RenderProfileForm({
   const history = useHistory();
 
   const onReturnToPage = () => {
-    history.push('/profile-list');
+    history.push('/profile');
   };
 
   return (

@@ -52,7 +52,6 @@ const getProfileData = authState => {
 const getTestProfileData = () => {
   try {
     return axios.get('http://localhost:3001/profile').then(res => {
-      console.log('test profile data', res.data);
       return res.data;
     });
   } catch (error) {
@@ -120,6 +119,51 @@ const removeTrip = tripId => {
   }
 };
 
+const removeFromTrip = itineraryId => {
+  try {
+    return axios
+      .delete(`http://localhost:3001/itinerary/${itineraryId}`)
+      .then(res => console.log('removeFromTrip', res.data));
+  } catch (error) {
+    console.log('removeFromTrip', error);
+    return [];
+  }
+};
+
+// ALL PINS API CALLS RESIDE BELOW
+const getPins = () => {
+  try {
+    return axios.get('http://localhost:3001/pins').then(res => {
+      return res.data;
+    });
+  } catch (error) {
+    console.log('getPins', error);
+    return [];
+  }
+};
+
+const addPin = data => {
+  try {
+    return axios
+      .post('http://localhost:3001/pins', data)
+      .then(res => console.log('addPin', res.data));
+  } catch (error) {
+    console.log('addPin', error);
+    return [];
+  }
+};
+
+const removePin = pinId => {
+  try {
+    return axios
+      .delete(`http://localhost:3001/pins/${pinId}`)
+      .then(res => console.log('removePin', res.data));
+  } catch (error) {
+    console.log('removePin', error);
+    return [];
+  }
+};
+
 export {
   sleep,
   getExampleData,
@@ -131,4 +175,8 @@ export {
   createNewTrip,
   addToTrip,
   removeTrip,
+  removeFromTrip,
+  getPins,
+  addPin,
+  removePin,
 };
