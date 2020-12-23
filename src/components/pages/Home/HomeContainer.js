@@ -6,7 +6,7 @@ import {
   fetchSearchResults,
   fetchCategoryResults,
 } from '../../../state/actions/index';
-import { getMyTrips, addToTrip, createNewTrip } from '../../../api';
+import { getMyTrips, addToTrip, createNewTrip, addPin } from '../../../api';
 
 function HomeContainer({
   LoadingComponent,
@@ -39,6 +39,7 @@ function HomeContainer({
   const [manual, setManual] = useState(false);
 
   // everything that handles addToTrip modal
+  const [tripUpdate, setTripUpdate] = useState(true);
   const [myTrips, setMyTrips] = useState([]);
   const [tripId, setTripId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -48,8 +49,17 @@ function HomeContainer({
   const handleTripId = id => setTripId(id);
 
   useEffect(() => {
-    getMyTrips().then(data => setMyTrips(data));
-  }, [myTrips]);
+    let mounted = true;
+    getMyTrips().then(data => {
+      if (mounted) {
+        setMyTrips(data);
+      }
+    });
+
+    return function cleanup() {
+      mounted = false;
+    };
+  }, [tripUpdate]);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -188,6 +198,9 @@ function HomeContainer({
           createNewTrip={createNewTrip}
           tripId={tripId}
           handleTripId={handleTripId}
+          addPin={addPin}
+          tripUpdate={tripUpdate}
+          setTripUpdate={setTripUpdate}
         />
       )}
     </React.Fragment>

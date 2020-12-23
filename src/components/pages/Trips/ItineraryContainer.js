@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import RenderItinerary from './RenderItinerary';
-import { getMyTrips, removeTrip } from '../../../api';
+import { getMyTrips, removeTrip, removeFromTrip } from '../../../api';
 import { LoadingComponent } from '../../common';
 import { useHistory } from 'react-router-dom';
 
@@ -26,6 +26,7 @@ function ItineraryContainer(props) {
         trip={foundTrip}
         removeTrip={removeTrip}
         onTripRemoval={onTripRemoval}
+        removeFromTrip={removeFromTrip}
       />
     );
   }

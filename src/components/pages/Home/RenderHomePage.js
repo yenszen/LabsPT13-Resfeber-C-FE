@@ -38,6 +38,9 @@ function RenderHomePage(props) {
     createNewTrip,
     tripId,
     handleTripId,
+    addPin,
+    tripUpdate,
+    setTripUpdate,
   } = props;
 
   return (
@@ -163,6 +166,20 @@ function RenderHomePage(props) {
                       handleClick={() => addMarkers(result)}
                     />
                     <Button
+                      buttonText="Pin destination"
+                      handleClick={() =>
+                        addPin({
+                          destination_name: result.venue.name,
+                          category: result.venue.categories[0].name,
+                          address: result.venue.location.address,
+                          lat: result.venue.location.lat,
+                          lng: result.venue.location.lng,
+                          city: result.venue.location.city,
+                          state: result.venue.location.state,
+                        })
+                      }
+                    />
+                    <Button
                       buttonText="Add to Trip"
                       handleClick={() => {
                         showModal();
@@ -179,15 +196,17 @@ function RenderHomePage(props) {
                 onCancel={handleCancel}
               >
                 {myTrips.length > 0 ? (
-                  <div>
+                  <div className="trip-modal">
                     {myTrips.map((trip, index) => (
                       <div
                         key={index}
-                        onClick={() =>
+                        className="trip-button"
+                        onClick={() => {
                           addToTrip(trip.id, {
                             itinerary: [
                               ...trip.itinerary,
                               {
+                                id: trip.itinerary.length + 1,
                                 name: searchResults[tripId].venue.name,
                                 category:
                                   searchResults[tripId].venue.categories[0]
@@ -201,17 +220,18 @@ function RenderHomePage(props) {
                                   searchResults[tripId].venue.location.state,
                               },
                             ],
-                          })
-                        }
+                          });
+                          setTripUpdate(!tripUpdate);
+                        }}
                       >
-                        {trip.tripName}
+                        <h4>{trip.tripName}</h4>
                       </div>
                     ))}
                     <div
-                      style={{ backgroundColor: 'lightblue' }}
-                      onClick={() =>
+                      className="new-trip-button"
+                      onClick={() => {
                         createNewTrip({
-                          tripName: `New trip ${myTrips.length + 1}`,
+                          tripName: `New trip to ${searchResults[tripId].venue.location.city}`,
                           itinerary: [
                             {
                               name: searchResults[tripId].venue.name,
@@ -225,18 +245,19 @@ function RenderHomePage(props) {
                               state: searchResults[tripId].venue.location.state,
                             },
                           ],
-                        })
-                      }
+                        });
+                        setTripUpdate(!tripUpdate);
+                      }}
                     >
-                      <h3>Create new trip</h3>
+                      <h4>Create new trip</h4>
                     </div>
                   </div>
                 ) : (
                   <div
-                    style={{ backgroundColor: 'lightblue' }}
-                    onClick={() =>
+                    className="new-trip-button"
+                    onClick={() => {
                       createNewTrip({
-                        tripName: `New trip ${myTrips.length + 1}`,
+                        tripName: `New trip to ${searchResults[tripId].venue.location.city}`,
                         itinerary: [
                           {
                             name: searchResults[tripId].venue.name,
@@ -250,10 +271,11 @@ function RenderHomePage(props) {
                             state: searchResults[tripId].venue.location.state,
                           },
                         ],
-                      })
-                    }
+                      });
+                      setTripUpdate(!tripUpdate);
+                    }}
                   >
-                    <h3>Create new trip</h3>
+                    <h4>Create new trip</h4>
                   </div>
                 )}
               </Modal>

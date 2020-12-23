@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '../../common/';
-import { Layout } from 'antd';
+import { Layout, Card } from 'antd';
 import './Trips.css';
 
 function RenderTripsPage({ myTrips }) {
@@ -9,11 +9,13 @@ function RenderTripsPage({ myTrips }) {
     <Layout>
       <Navbar />
       <div className="trips">
-        {myTrips.map(trip => (
-          <div key={trip.id} className="trip-card">
+        {myTrips.map((trip, index) => (
+          <div className="trip-card" key={index}>
             <Link to={`/itinerary/${trip.id}`}>
-              <h2>{trip.tripName}</h2>
-              <p>{trip.itinerary.length} featured items</p>
+              <Card title={trip.tripName}>
+                <p>{trip.startDate}</p>
+                <p>{trip.itinerary.length} featured items</p>
+              </Card>
             </Link>
           </div>
         ))}
