@@ -10,6 +10,8 @@ function RenderProfileForm({
   CustomVehicleSelect,
   CustomAccommodationSelect,
   editProfile,
+  userInfo,
+  authState,
 }) {
   const history = useHistory();
 
@@ -28,7 +30,7 @@ function RenderProfileForm({
           address_2: '',
           carType: '',
           budget: '',
-          accommodationType: '',
+          accommodation_type: '',
         }}
         validationSchema={Yup.object({
           user_name: Yup.string()
@@ -38,7 +40,7 @@ function RenderProfileForm({
             .matches(/^[A-Za-z ]+$/),
           status: Yup.string()
             .required('Status required')
-            .oneOf(['single', 'couple', 'family'], 'Invalid status'),
+            .oneOf(['Single', 'Couple', 'Family'], 'Invalid status'),
           address_1: Yup.string()
             .required('First address line required')
             .min(3, 'Must be at least 3 characters'),
@@ -46,27 +48,26 @@ function RenderProfileForm({
           carType: Yup.string()
             .required('Vehicle type information required')
             .oneOf(
-              ['hatchback', 'sedan', 'suv', 'minivan', 'truck', 'other'],
+              ['Hatchback', 'Sedan', 'SUV', 'Minivan', 'Truck', 'Other'],
               'Invalid car type'
             ),
           budget: Yup.number()
             .required('Preferred budget information required')
             .positive()
             .integer(),
-          accommodationType: Yup.string()
+          accommodation_type: Yup.string()
             .required('Preferred accommodation information required')
             .oneOf(
-              ['entirePlace', 'privateRoom', 'sharedRoom', 'hotelRoom'],
+              ['Entire Place', 'Private Room', 'Shared Room', 'Hotel Room'],
               'Invalid accommodation type'
             ),
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          editProfile(values);
           resetForm();
           setSubmitting(false);
-          setTimeout(() => {
-            onReturnToPage();
-          }, 1000);
+          editProfile({ ...values, id: userInfo.sub }, authState).then(() =>
+            onReturnToPage()
+          );
         }}
       >
         {props => (
@@ -108,9 +109,9 @@ function RenderProfileForm({
             />
             <CustomAccommodationSelect
               label="Accommodation Type"
-              name="accommodationType"
+              name="accommodation_type"
               onChange={value =>
-                props.setFieldValue('accommodationType', value)
+                props.setFieldValue('accommodation_type', value)
               }
             />
             <div

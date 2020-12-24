@@ -1,17 +1,39 @@
-import React, { useState, useEffect } from 'react';
-// import { useOktaAuth } from '@okta/okta-react';
-import { getTestProfileData } from '../../../api';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useOktaAuth } from '@okta/okta-react';
+import { getProfileData } from '../../../api';
 import RenderProfileListPage from './RenderProfileListPage';
 import { LoadingComponent } from '../../common';
 
-// Here is an example of using our reusable List component to display some list data to the UI.
 const ProfileList = () => {
-  // const { authState } = useOktaAuth();
+  const { authState, authService } = useOktaAuth();
   const [profile, setProfile] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  // eslint-disable-next-line
+  const [memoAuthService] = useMemo(() => [authService], []);
 
   useEffect(() => {
-    getTestProfileData().then(data => setProfile(data));
-  }, []);
+    let isSubscribed = true;
+
+    memoAuthService
+      .getUser()
+      .then(info => {
+        if (isSubscribed) {
+          setUserInfo(info);
+        }
+      })
+      .catch(err => {
+        isSubscribed = false;
+        return setUserInfo(null);
+      });
+    return () => (isSubscribed = false);
+  }, [memoAuthService]);
+
+  useEffect(() => {
+    if (userInfo) {
+      getProfileData(userInfo.sub, authState).then(data => setProfile(data));
+    }
+    // eslint-disable-next-line
+  }, [userInfo]);
 
   return profile ? (
     <RenderProfileListPage data={profile} />
