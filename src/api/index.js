@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 // we will define a bunch of API calls here.
-const apiUrl = `${process.env.REACT_APP_API_URI}/profiles`;
+const profileURL = `${process.env.REACT_APP_API_URI}/profile`;
+const tripsURL = `${process.env.REACT_APP_API_URI}/trips`;
+const itineraryURL = `${process.env.REACT_APP_API_URI}/itinerary`;
+const pinsURL = `${process.env.REACT_APP_API_URI}/pins`;
 
 const sleep = time =>
   new Promise(resolve => {
@@ -34,13 +37,32 @@ const getDSData = (url, authState) => {
     .catch(err => err);
 };
 
-const apiAuthGet = authHeader => {
-  return axios.get(apiUrl, { headers: authHeader });
+const apiAuthGet = (url, authHeader) => {
+  return axios.get(url, { headers: authHeader });
 };
 
-const getProfileData = authState => {
+const apiAuthPost = (url, data, authHeader) => {
+  return axios.post(url, data, { headers: authHeader });
+};
+
+const apiAuthPut = (url, data, authHeader) => {
+  return axios.put(url, data, { headers: authHeader });
+};
+
+const apiAuthPatch = (url, data, authHeader) => {
+  return axios.patch(url, data, { headers: authHeader });
+};
+
+const apiAuthDelete = (url, authHeader) => {
+  return axios.delete(url, { headers: authHeader });
+};
+
+// PROFILE API CALLS
+const getProfileData = (userId, authState) => {
   try {
-    return apiAuthGet(getAuthHeader(authState)).then(response => response.data);
+    return apiAuthGet(`${profileURL}/${userId}`, getAuthHeader(authState)).then(
+      res => res.data
+    );
   } catch (error) {
     return new Promise(() => {
       console.log(error);
@@ -49,33 +71,22 @@ const getProfileData = authState => {
   }
 };
 
-const getTestProfileData = () => {
+const editProfile = (data, authState) => {
   try {
-    return axios.get('http://localhost:3001/profile').then(res => {
-      return res.data;
-    });
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-};
-
-const editProfile = data => {
-  try {
-    return axios.put('http://localhost:3001/profile', data).then(res => {
-      console.log('editProfile', res.data);
-    });
+    return apiAuthPut(profileURL, data, getAuthHeader(authState)).then(res =>
+      console.log('editProfile', res.data)
+    );
   } catch (error) {
     console.log('editProfile', error);
     return [];
   }
 };
 
-// ALL TRIPS API CALLS RESIDE BELOW
-const getMyTrips = () => {
+// TRIPS API CALLS
+const getMyTrips = authState => {
   try {
-    return axios.get('http://localhost:3001/myTrips').then(res => {
-      // console.log('getMyTrips', res.data);
+    return apiAuthGet(tripsURL, getAuthHeader(authState)).then(res => {
+      console.log('getMyTrips', res.data);
       return res.data;
     });
   } catch (error) {
@@ -84,56 +95,88 @@ const getMyTrips = () => {
   }
 };
 
-const createNewTrip = data => {
+const createNewTrip = (data, authState) => {
   try {
-    return axios.post(`http://localhost:3001/myTrips`, data).then(res => {
-      console.log('createNewTrip', res.data);
-    });
+    return apiAuthPost(tripsURL, data, getAuthHeader(authState)).then(res =>
+      console.log('createNewTrip', res.data)
+    );
   } catch (error) {
     console.log('createNewTrip', error);
     return [];
   }
 };
 
-const addToTrip = (tripId, data) => {
+const editTrip = (tripId, data, authState) => {
   try {
-    return axios
-      .patch(`http://localhost:3001/myTrips/${tripId}`, data)
-      .then(res => {
-        console.log('addToTrip', res.data);
-      });
+    return apiAuthPatch(
+      `${tripsURL}/${tripId}`,
+      data,
+      getAuthHeader(authState)
+    ).then(res => console.log('editTrip', res.data));
   } catch (error) {
-    console.log('addToTrip', error);
+    console.log('editTrip', error);
     return [];
   }
 };
 
-const removeTrip = tripId => {
+const removeTrip = (tripId, authState) => {
   try {
-    return axios
-      .delete(`http://localhost:3001/myTrips/${tripId}`)
-      .then(res => console.log('removeTrip', res.data));
+    return apiAuthDelete(
+      `${tripsURL}/${tripId}`,
+      getAuthHeader(authState)
+    ).then(res => console.log('removeFromTrip', res.data));
   } catch (error) {
     console.log('removeTrip', error);
     return [];
   }
 };
 
-const removeFromTrip = itineraryId => {
+// ITINERARY (locations) API CALLS
+const getItinerary = (itineraryId, authState) => {
   try {
-    return axios
-      .delete(`http://localhost:3001/itinerary/${itineraryId}`)
-      .then(res => console.log('removeFromTrip', res.data));
+    return apiAuthGet(
+      `${itineraryURL}/${itineraryId}`,
+      getAuthHeader(authState)
+    ).then(res => {
+      console.log('getItinerary', res.data);
+      return res.data;
+    });
+  } catch (error) {
+    console.log('getItinerary', error);
+    return [];
+  }
+};
+
+const addToTrip = (itineraryId, data, authState) => {
+  try {
+    return apiAuthPost(
+      `${itineraryURL}/${itineraryId}`,
+      data,
+      getAuthHeader(authState)
+    ).then(res => console.log('addToTrip', res.data));
+  } catch (error) {
+    console.log('addToTrip', error);
+    return [];
+  }
+};
+
+const removeFromTrip = (itineraryId, authState) => {
+  try {
+    return apiAuthDelete(
+      `${itineraryURL}/${itineraryId}`,
+      getAuthHeader(authState)
+    ).then(res => console.log('removeFromTrip', res.data));
   } catch (error) {
     console.log('removeFromTrip', error);
     return [];
   }
 };
 
-// ALL PINS API CALLS RESIDE BELOW
-const getPins = () => {
+// PINS API CALLS
+const getPins = authState => {
   try {
-    return axios.get('http://localhost:3001/pins').then(res => {
+    return apiAuthGet(pinsURL, getAuthHeader(authState)).then(res => {
+      console.log('getPins', res.data);
       return res.data;
     });
   } catch (error) {
@@ -142,22 +185,23 @@ const getPins = () => {
   }
 };
 
-const addPin = data => {
+const addPin = (data, authState) => {
   try {
-    return axios
-      .post('http://localhost:3001/pins', data)
-      .then(res => console.log('addPin', res.data));
+    return apiAuthPost(pinsURL, data, getAuthHeader(authState)).then(res =>
+      console.log('addPin', res.data)
+    );
   } catch (error) {
     console.log('addPin', error);
     return [];
   }
 };
 
-const removePin = pinId => {
+const removePin = (pinId, authState) => {
   try {
-    return axios
-      .delete(`http://localhost:3001/pins/${pinId}`)
-      .then(res => console.log('removePin', res.data));
+    return apiAuthDelete(
+      `${pinsURL}/${pinId}`,
+      getAuthHeader(authState)
+    ).then(res => console.log('removePin', res.data));
   } catch (error) {
     console.log('removePin', error);
     return [];
@@ -167,14 +211,15 @@ const removePin = pinId => {
 export {
   sleep,
   getExampleData,
-  getProfileData,
   getDSData,
-  getTestProfileData,
+  getProfileData,
   editProfile,
   getMyTrips,
   createNewTrip,
-  addToTrip,
+  editTrip,
   removeTrip,
+  getItinerary,
+  addToTrip,
   removeFromTrip,
   getPins,
   addPin,
