@@ -3,34 +3,50 @@ import { Navbar, Button } from '../../common';
 import { Layout, Card } from 'antd';
 import './Trips.css';
 
-function RenderItinerary({ trip, removeTrip, onTripRemoval, removeFromTrip }) {
+function RenderItinerary({
+  onTripRemoval,
+  itinerary,
+  removeTrip,
+  authState,
+  removeFromTrip,
+  tripId,
+  goToEditForm,
+}) {
   return (
     <Layout>
       <Navbar />
-      <h2 style={{ textAlign: 'center' }}>{trip.tripName}</h2>
-      <Button
-        buttonText="Remove Trip"
-        handleClick={() => {
-          removeTrip(trip.id);
-          onTripRemoval();
-        }}
-      />
+      <div>
+        <Button
+          buttonText="Edit Trip"
+          handleClick={() => goToEditForm(parseInt(tripId))}
+        />
+        <Button
+          buttonText="Remove Trip"
+          handleClick={() => {
+            removeTrip(parseInt(tripId), authState).then(() => onTripRemoval());
+          }}
+        />
+      </div>
       <div className="destinations">
-        {trip.itinerary.map((destination, index) => (
+        {itinerary.map((item, index) => (
           <Card
-            title={destination.name}
+            title={item.destination_name}
             extra={
               <Button
                 buttonText="Remove destination"
-                handleClick={() => removeFromTrip(destination.id)}
+                handleClick={() =>
+                  removeFromTrip(item.id, authState).then(() =>
+                    window.location.reload()
+                  )
+                }
               />
             }
             key={index}
           >
-            <p>{destination.category}</p>
-            <p>{destination.address}</p>
+            <p>{item.category}</p>
+            <p>{item.address}</p>
             <p>
-              {destination.city}, {destination.state}
+              {item.city}, {item.state}
             </p>
           </Card>
         ))}

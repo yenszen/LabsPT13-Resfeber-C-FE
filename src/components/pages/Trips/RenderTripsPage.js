@@ -12,9 +12,14 @@ function RenderTripsPage({ myTrips }) {
         {myTrips.map((trip, index) => (
           <div className="trip-card" key={index}>
             <Link to={`/itinerary/${trip.id}`}>
-              <Card title={trip.tripName}>
-                <p>{trip.startDate}</p>
-                <p>{trip.itinerary.length} featured items</p>
+              <Card title={trip.tripname}>
+                {!trip.start_date && !trip.end_date ? (
+                  <p>Dates unspecified</p>
+                ) : (
+                  <p>
+                    {trip.start_date} to {trip.end_date}
+                  </p>
+                )}
               </Card>
             </Link>
           </div>

@@ -115,7 +115,7 @@ a {
   line-height: 2.5rem;
 }
 
-.trip-button:nth-child(2) {
+.trip-button:nth-child(even) {
   background-color: lightgrey;
 }
 

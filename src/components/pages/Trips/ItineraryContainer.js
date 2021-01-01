@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import RenderItinerary from './RenderItinerary';
-import { getMyTrips, removeTrip, removeFromTrip } from '../../../api';
+import { getItinerary, removeTrip, removeFromTrip } from '../../../api';
 import { LoadingComponent } from '../../common';
 import { useHistory } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 
 function ItineraryContainer(props) {
+  const { authState } = useOktaAuth();
   const [itinerary, setItinerary] = useState([]);
 
   useEffect(() => {
-    getMyTrips().then(data => setItinerary(data));
+    let tripId = parseInt(props.match.params.id);
+    getItinerary(tripId, authState).then(data => setItinerary(data));
+    // eslint-disable-next-line
   }, []);
 
   const history = useHistory();
@@ -17,21 +21,27 @@ function ItineraryContainer(props) {
     history.push('/trips');
   };
 
-  if (itinerary.length > 0) {
-    let tripId = parseInt(props.match.params.id);
-    let foundTrip = itinerary.find(tripObj => tripObj.id === tripId);
+  const goToEditForm = tripId => {
+    history.push(`/edit-trip/${tripId}`);
+  };
 
+  if (itinerary) {
     return (
       <RenderItinerary
-        trip={foundTrip}
         removeTrip={removeTrip}
         onTripRemoval={onTripRemoval}
         removeFromTrip={removeFromTrip}
+        itinerary={itinerary}
+        authState={authState}
+        tripId={props.match.params.id}
+        goToEditForm={goToEditForm}
       />
     );
+  } else {
+    return (
+      <LoadingComponent message="There are no destinations added to this itinerary" />
+    );
   }
-
-  return <LoadingComponent message="Fetching itinerary" />;
 }
 
 export default ItineraryContainer;

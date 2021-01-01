@@ -49,16 +49,14 @@ function HomeContainer({
   const handleTripId = id => setTripId(id);
 
   useEffect(() => {
-    let mounted = true;
-    getMyTrips().then(data => {
-      if (mounted) {
+    getMyTrips(authState).then(data => {
+      if (data.length > 0) {
         setMyTrips(data);
+      } else {
+        setMyTrips([]);
       }
     });
-
-    return function cleanup() {
-      mounted = false;
-    };
+    // eslint-disable-next-line
   }, [tripUpdate]);
 
   useEffect(() => {
@@ -171,6 +169,7 @@ function HomeContainer({
       {authState.isAuthenticated && userInfo && (
         <RenderHomePage
           userInfo={userInfo}
+          authState={authState}
           searchResults={searchResults}
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}

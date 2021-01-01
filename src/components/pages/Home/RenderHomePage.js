@@ -11,6 +11,7 @@ const { Content } = Layout;
 function RenderHomePage(props) {
   const {
     userInfo,
+    authState,
     searchResults,
     handleSubmit,
     handleQueryInput,
@@ -168,15 +169,21 @@ function RenderHomePage(props) {
                     <Button
                       buttonText="Pin destination"
                       handleClick={() =>
-                        addPin({
-                          destination_name: result.venue.name,
-                          category: result.venue.categories[0].name,
-                          address: result.venue.location.address,
-                          lat: result.venue.location.lat,
-                          lng: result.venue.location.lng,
-                          city: result.venue.location.city,
-                          state: result.venue.location.state,
-                        })
+                        addPin(
+                          {
+                            destination_name: result.venue.name,
+                            category: result.venue.categories[0].name,
+                            address: result.venue.location.address,
+                            lat: result.venue.location.lat,
+                            lng: result.venue.location.lng,
+                            city: result.venue.location.city,
+                            state: result.venue.location.state,
+                            user_id: userInfo.sub,
+                          },
+                          authState
+                        )
+                          .then(() => alert('Pin added!'))
+                          .catch(err => console.log('/Pin POST error', err))
                       }
                     />
                     <Button
@@ -202,39 +209,11 @@ function RenderHomePage(props) {
                         key={index}
                         className="trip-button"
                         onClick={() => {
-                          addToTrip(trip.id, {
-                            itinerary: [
-                              ...trip.itinerary,
-                              {
-                                id: trip.itinerary.length + 1,
-                                name: searchResults[tripId].venue.name,
-                                category:
-                                  searchResults[tripId].venue.categories[0]
-                                    .name,
-                                address:
-                                  searchResults[tripId].venue.location.address,
-                                lat: searchResults[tripId].venue.location.lat,
-                                lng: searchResults[tripId].venue.location.lng,
-                                city: searchResults[tripId].venue.location.city,
-                                state:
-                                  searchResults[tripId].venue.location.state,
-                              },
-                            ],
-                          });
-                          setTripUpdate(!tripUpdate);
-                        }}
-                      >
-                        <h4>{trip.tripName}</h4>
-                      </div>
-                    ))}
-                    <div
-                      className="new-trip-button"
-                      onClick={() => {
-                        createNewTrip({
-                          tripName: `New trip to ${searchResults[tripId].venue.location.city}`,
-                          itinerary: [
+                          addToTrip(
                             {
-                              name: searchResults[tripId].venue.name,
+                              trip_id: trip.id,
+                              destination_name:
+                                searchResults[tripId].venue.name,
                               category:
                                 searchResults[tripId].venue.categories[0].name,
                               address:
@@ -244,9 +223,23 @@ function RenderHomePage(props) {
                               city: searchResults[tripId].venue.location.city,
                               state: searchResults[tripId].venue.location.state,
                             },
-                          ],
-                        });
-                        setTripUpdate(!tripUpdate);
+                            authState
+                          ).then(() => alert('Destination added to trip!'));
+                        }}
+                      >
+                        <h4>{trip.tripname}</h4>
+                      </div>
+                    ))}
+                    <div
+                      className="new-trip-button"
+                      onClick={() => {
+                        createNewTrip(
+                          {
+                            tripname: `New trip to ${searchResults[tripId].venue.location.state}`,
+                            user_id: userInfo.sub,
+                          },
+                          authState
+                        ).then(() => setTripUpdate(!tripUpdate));
                       }}
                     >
                       <h4>Create new trip</h4>
@@ -256,23 +249,13 @@ function RenderHomePage(props) {
                   <div
                     className="new-trip-button"
                     onClick={() => {
-                      createNewTrip({
-                        tripName: `New trip to ${searchResults[tripId].venue.location.city}`,
-                        itinerary: [
-                          {
-                            name: searchResults[tripId].venue.name,
-                            category:
-                              searchResults[tripId].venue.categories[0].name,
-                            address:
-                              searchResults[tripId].venue.location.address,
-                            lat: searchResults[tripId].venue.location.lat,
-                            lng: searchResults[tripId].venue.location.lng,
-                            city: searchResults[tripId].venue.location.city,
-                            state: searchResults[tripId].venue.location.state,
-                          },
-                        ],
-                      });
-                      setTripUpdate(!tripUpdate);
+                      createNewTrip(
+                        {
+                          tripname: `New trip to ${searchResults[tripId].venue.location.state}`,
+                          user_id: userInfo.sub,
+                        },
+                        authState
+                      ).then(() => setTripUpdate(!tripUpdate));
                     }}
                   >
                     <h4>Create new trip</h4>

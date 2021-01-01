@@ -26,7 +26,7 @@ import { LoginPage } from './components/pages/Login';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
 import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
-import { TripsList, Itinerary } from './components/pages/Trips';
+import { TripsList, Itinerary, TripForm } from './components/pages/Trips';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -71,6 +71,10 @@ function App() {
         <SecureRoute
           path="/itinerary/:id"
           render={renderProps => <Itinerary {...renderProps} />}
+        />
+        <SecureRoute
+          path="/edit-trip/:id"
+          render={renderProps => <TripForm {...renderProps} />}
         />
         <Route component={NotFoundPage} />
       </Switch>

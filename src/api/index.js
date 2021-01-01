@@ -124,7 +124,7 @@ const removeTrip = (tripId, authState) => {
     return apiAuthDelete(
       `${tripsURL}/${tripId}`,
       getAuthHeader(authState)
-    ).then(res => console.log('removeFromTrip', res.data));
+    ).then(res => console.log('removeTrip', res.data));
   } catch (error) {
     console.log('removeTrip', error);
     return [];
@@ -132,14 +132,13 @@ const removeTrip = (tripId, authState) => {
 };
 
 // ITINERARY (locations) API CALLS
-const getItinerary = (itineraryId, authState) => {
+const getItinerary = (tripId, authState) => {
   try {
-    return apiAuthGet(
-      `${itineraryURL}/${itineraryId}`,
-      getAuthHeader(authState)
-    ).then(res => {
+    return apiAuthGet(itineraryURL, getAuthHeader(authState)).then(res => {
       console.log('getItinerary', res.data);
-      return res.data;
+      const relevantLocs = res.data.filter(item => item.trip_id === tripId);
+      // return res.data;
+      return relevantLocs;
     });
   } catch (error) {
     console.log('getItinerary', error);
@@ -147,13 +146,11 @@ const getItinerary = (itineraryId, authState) => {
   }
 };
 
-const addToTrip = (itineraryId, data, authState) => {
+const addToTrip = (data, authState) => {
   try {
-    return apiAuthPost(
-      `${itineraryURL}/${itineraryId}`,
-      data,
-      getAuthHeader(authState)
-    ).then(res => console.log('addToTrip', res.data));
+    return apiAuthPost(itineraryURL, data, getAuthHeader(authState)).then(res =>
+      console.log('addToTrip', res.data)
+    );
   } catch (error) {
     console.log('addToTrip', error);
     return [];

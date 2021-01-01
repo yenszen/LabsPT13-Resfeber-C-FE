@@ -1,32 +1,143 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Card } from 'antd';
+import { Layout, Card, Modal } from 'antd';
 import { Navbar, Button } from '../../common';
-import { addToTrip, removePin } from '../../../api';
+import './Pins.css';
 
-const RenderPinnedList = props => (
-  <Layout>
+const RenderPinnedList = ({
+  data,
+  authState,
+  handlePinListUpdate,
+  isModalVisible,
+  showModal,
+  handleOk,
+  handleCancel,
+  handleTripListUpdate,
+  myTrips,
+  createNewTrip,
+  removePin,
+  userInfo,
+  addToTrip,
+  selectedItem,
+  handleSelectedItem,
+}) => (
+  <Layout style={{ background: 'white' }}>
     <Navbar />
-    {props.data.map((item, index) => (
-      <Card
-        title={item.destination_name}
-        extra={
-          <div>
-            <Button buttonText="Add to trip" type="ghost" />
-            <Button
-              buttonText="Remove pin"
-              handleClick={() => removePin(item.id)}
-            />
-          </div>
-        }
-        key={index}
-      >
-        <p>{item.category}</p>
-        <p>{item.address}</p>
-        <p>
-          {item.city}, {item.state}
-        </p>
-      </Card>
+    {data.map((item, index) => (
+      <React.Fragment>
+        <Card
+          title={item.destination_name}
+          extra={
+            <div>
+              <Button
+                buttonText="Add to trip"
+                type="ghost"
+                handleClick={() => {
+                  handleSelectedItem(item);
+                  showModal();
+                }}
+              />
+              <Button
+                buttonText="Remove pin"
+                type="danger"
+                handleClick={() => {
+                  removePin(item.id, authState).then(() =>
+                    handlePinListUpdate()
+                  );
+                }}
+              />
+            </div>
+          }
+          key={index}
+          style={{ width: '80%', margin: '1rem auto 0' }}
+        >
+          <p>{item.category}</p>
+          <p>{item.address}</p>
+          <p>
+            {item.city}, {item.state}
+          </p>
+        </Card>
+
+        <Modal
+          title="Add to Trip"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          {myTrips.length > 0 ? (
+            <div className="trip-modal">
+              {myTrips.map((trip, tripIndex) => (
+                <div
+                  key={tripIndex}
+                  className="trip-button"
+                  onClick={() =>
+                    addToTrip(
+                      {
+                        trip_id: trip.id,
+                        destination_name: selectedItem.destination_name,
+                        category: selectedItem.category,
+                        address: selectedItem.address,
+                        lat: selectedItem.lat,
+                        lng: selectedItem.lng,
+                        city: selectedItem.city,
+                        state: selectedItem.state,
+                      },
+                      authState
+                    )
+                      .then(() => removePin(selectedItem.id, authState))
+                      .then(() => {
+                        handlePinListUpdate();
+                        handleTripListUpdate();
+                      })
+                  }
+                >
+                  <h4>{trip.tripname}</h4>
+                </div>
+              ))}
+              <div
+                className="new-trip-button"
+                onClick={() =>
+                  createNewTrip(
+                    {
+                      tripname: `New trip to ${selectedItem.state}`,
+                      user_id: userInfo.sub,
+                    },
+                    authState
+                  ).then(() => {
+                    removePin(selectedItem.id, authState).then(() => {
+                      handlePinListUpdate();
+                      handleTripListUpdate();
+                    });
+                  })
+                }
+              >
+                <h4>Create New Trip</h4>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="new-trip-button"
+              onClick={() =>
+                createNewTrip(
+                  {
+                    tripname: `New trip to ${selectedItem.state}`,
+                    user_id: userInfo.sub,
+                  },
+                  authState
+                ).then(() => {
+                  handleTripListUpdate();
+                  removePin(selectedItem.id, authState).then(() => {
+                    handlePinListUpdate();
+                    handleTripListUpdate();
+                  });
+                })
+              }
+            >
+              <h4>Create new trip</h4>
+            </div>
+          )}
+        </Modal>
+      </React.Fragment>
     ))}
   </Layout>
 );
