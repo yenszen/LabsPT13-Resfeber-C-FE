@@ -5,11 +5,8 @@ import { ProfileListPage } from '../components/pages/ProfileList';
 
 afterEach(cleanup);
 
-// jest.mock('../api', () => {
-//   return { getProfileData: () => Promise.resolve([]) };
-// });
 jest.mock('../api', () => {
-  return { getTestProfileData: () => Promise.resolve({}) };
+  return { getProfileData: () => Promise.resolve({}) };
 });
 
 jest.mock('@okta/okta-react', () => ({
@@ -18,7 +15,7 @@ jest.mock('@okta/okta-react', () => ({
       authState: {
         isAuthenticated: true,
       },
-      authService: {},
+      authService: { getUser: () => Promise.resolve({ name: 'sara' }) },
     };
   },
 }));
