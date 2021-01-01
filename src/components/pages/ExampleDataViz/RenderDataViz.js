@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import { getDSData } from '../../../api';
+import './Data.css';
 
 const initialState = {
   data: [],
@@ -31,15 +32,17 @@ function DataViz(props) {
   }, [props.url, props.authState]);
 
   return (
-    <Plot
-      className="DataViz"
-      data={data.data}
-      layout={data.layout}
-      frames={data.frames}
-      config={data.config}
-      onInitialized={figure => setFigure(figure)}
-      onUpdate={figure => setFigure(figure)}
-    />
+    <div className="data">
+      <Plot
+        className="DataViz"
+        data={data.data}
+        layout={data.layout}
+        frames={data.frames}
+        config={data.config}
+        onInitialized={figure => setFigure(figure)}
+        onUpdate={figure => setFigure(figure)}
+      />
+    </div>
   );
 }
 
