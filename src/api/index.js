@@ -5,6 +5,7 @@ const profileURL = `${process.env.REACT_APP_API_URI}/profile`;
 const tripsURL = `${process.env.REACT_APP_API_URI}/trips`;
 const itineraryURL = `${process.env.REACT_APP_API_URI}/itinerary`;
 const pinsURL = `${process.env.REACT_APP_API_URI}/pins`;
+const dataURL = `${process.env.REACT_APP_API_URI}/temp_ds_api`;
 
 const sleep = time =>
   new Promise(resolve => {
@@ -24,6 +25,7 @@ const getAuthHeader = authState => {
   return { Authorization: `Bearer ${authState.idToken}` };
 };
 
+// DS API CALLS
 const getDSData = (url, authState) => {
   // here's another way you can compose together your API calls.
   // Note the use of GetAuthHeader here is a little different than in the getProfileData call.
@@ -35,6 +37,33 @@ const getDSData = (url, authState) => {
     .get(url, { headers })
     .then(res => JSON.parse(res.data))
     .catch(err => err);
+};
+
+const getFuelData = stateCode => {
+  try {
+    return axios.get(`${dataURL}/fuel/${stateCode}`).then(res => {
+      console.log('getFuelData', res.data);
+      return res.data;
+    });
+  } catch (error) {
+    console.log('getFuelData', error);
+  }
+};
+
+const getDrivingDistance = coordinates => {
+  try {
+    const joined = coordinates.join(';');
+    return axios
+      .get(
+        `https://api.mapbox.com/directions/v5/mapbox/driving/${joined}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
+      )
+      .then(res => {
+        console.log('getDrivingDistance', res.data);
+        return res.data;
+      });
+  } catch (error) {
+    console.log('getDrivingDistance', error);
+  }
 };
 
 const apiAuthGet = (url, authHeader) => {
@@ -83,9 +112,12 @@ const editProfile = (data, authState) => {
 };
 
 // TRIPS API CALLS
-const getMyTrips = authState => {
+const getMyTrips = (userId, authState) => {
   try {
-    return apiAuthGet(tripsURL, getAuthHeader(authState)).then(res => {
+    return apiAuthGet(
+      `${tripsURL}/${userId}/user`,
+      getAuthHeader(authState)
+    ).then(res => {
       console.log('getMyTrips', res.data);
       return res.data;
     });
@@ -209,6 +241,8 @@ export {
   sleep,
   getExampleData,
   getDSData,
+  getFuelData,
+  getDrivingDistance,
   getProfileData,
   editProfile,
   getMyTrips,
