@@ -5,6 +5,7 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Homepage.css';
 import { Layout, Modal } from 'antd';
+import { getMyTrips } from '../../../api';
 
 const { Content } = Layout;
 
@@ -239,7 +240,33 @@ function RenderHomePage(props) {
                             user_id: userInfo.sub,
                           },
                           authState
-                        ).then(() => setTripUpdate(!tripUpdate));
+                        )
+                          .then(() =>
+                            getMyTrips(userInfo.sub, authState).then(data => {
+                              const newId = data[data.length - 1].id;
+                              addToTrip(
+                                {
+                                  trip_id: newId,
+                                  destination_name:
+                                    searchResults[tripId].venue.name,
+                                  category:
+                                    searchResults[tripId].venue.categories[0]
+                                      .name,
+                                  address:
+                                    searchResults[tripId].venue.location
+                                      .address,
+                                  lat: searchResults[tripId].venue.location.lat,
+                                  lng: searchResults[tripId].venue.location.lng,
+                                  city:
+                                    searchResults[tripId].venue.location.city,
+                                  state:
+                                    searchResults[tripId].venue.location.state,
+                                },
+                                authState
+                              );
+                            })
+                          )
+                          .then(() => setTripUpdate(!tripUpdate));
                       }}
                     >
                       <h4>Create new trip</h4>
@@ -255,7 +282,31 @@ function RenderHomePage(props) {
                           user_id: userInfo.sub,
                         },
                         authState
-                      ).then(() => setTripUpdate(!tripUpdate));
+                      )
+                        .then(() =>
+                          getMyTrips(userInfo.sub, authState).then(data => {
+                            const newId = data[data.length - 1].id;
+                            addToTrip(
+                              {
+                                trip_id: newId,
+                                destination_name:
+                                  searchResults[tripId].venue.name,
+                                category:
+                                  searchResults[tripId].venue.categories[0]
+                                    .name,
+                                address:
+                                  searchResults[tripId].venue.location.address,
+                                lat: searchResults[tripId].venue.location.lat,
+                                lng: searchResults[tripId].venue.location.lng,
+                                city: searchResults[tripId].venue.location.city,
+                                state:
+                                  searchResults[tripId].venue.location.state,
+                              },
+                              authState
+                            );
+                          })
+                        )
+                        .then(() => setTripUpdate(!tripUpdate));
                     }}
                   >
                     <h4>Create new trip</h4>
