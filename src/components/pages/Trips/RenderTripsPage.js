@@ -2,12 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '../../common/';
 import { Layout, Card } from 'antd';
+import { Briefcase } from 'react-feather';
 import './Trips.css';
 
 function RenderTripsPage({ myTrips }) {
   return (
-    <Layout>
+    <Layout className="trips-layout">
       <Navbar />
+      <div className="trips-header">
+        <Briefcase className="trips-icon" />
+        <span>Trips</span>
+      </div>
       <div className="trips">
         {myTrips.map((trip, index) => (
           <div className="trip-card" key={index}>
