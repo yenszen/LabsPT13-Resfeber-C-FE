@@ -54,20 +54,22 @@ const PinnedListContainer = () => {
   };
 
   const handleTripListUpdate = () => {
-    getMyTrips(authState).then(data => {
-      if (data.length > 0) {
-        setMyTrips(data);
-      } else {
-        setMyTrips([]);
-      }
-    });
+    if (userInfo) {
+      getMyTrips(userInfo.sub, authState).then(data => {
+        if (data.length > 0) {
+          setMyTrips(data);
+        } else {
+          setMyTrips([]);
+        }
+      });
+    }
   };
 
   useEffect(() => {
     handlePinListUpdate();
     handleTripListUpdate();
     // eslint-disable-next-line
-  }, []);
+  }, [userInfo]);
 
   // handles adding Pins to Trips
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -100,6 +102,7 @@ const PinnedListContainer = () => {
           addToTrip={addToTrip}
           selectedItem={selectedItem}
           handleSelectedItem={handleSelectedItem}
+          getMyTrips={getMyTrips}
         />
       ) : (
         <React.Fragment>

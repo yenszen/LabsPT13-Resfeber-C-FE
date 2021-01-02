@@ -20,6 +20,7 @@ const RenderPinnedList = ({
   addToTrip,
   selectedItem,
   handleSelectedItem,
+  getMyTrips,
 }) => (
   <Layout style={{ background: 'white' }}>
     <Navbar />
@@ -103,12 +104,31 @@ const RenderPinnedList = ({
                       user_id: userInfo.sub,
                     },
                     authState
-                  ).then(() => {
-                    removePin(selectedItem.id, authState).then(() => {
-                      handlePinListUpdate();
-                      handleTripListUpdate();
-                    });
-                  })
+                  )
+                    .then(() =>
+                      getMyTrips(userInfo.sub, authState).then(data => {
+                        const newId = data[data.length - 1].id;
+                        addToTrip(
+                          {
+                            trip_id: newId,
+                            destination_name: selectedItem.destination_name,
+                            category: selectedItem.category,
+                            address: selectedItem.address,
+                            lat: selectedItem.lat,
+                            lng: selectedItem.lng,
+                            city: selectedItem.city,
+                            state: selectedItem.state,
+                          },
+                          authState
+                        );
+                      })
+                    )
+                    .then(() => {
+                      removePin(selectedItem.id, authState).then(() => {
+                        handlePinListUpdate();
+                        handleTripListUpdate();
+                      });
+                    })
                 }
               >
                 <h4>Create New Trip</h4>
@@ -124,13 +144,32 @@ const RenderPinnedList = ({
                     user_id: userInfo.sub,
                   },
                   authState
-                ).then(() => {
-                  handleTripListUpdate();
-                  removePin(selectedItem.id, authState).then(() => {
-                    handlePinListUpdate();
+                )
+                  .then(() =>
+                    getMyTrips(userInfo.sub, authState).then(data => {
+                      const newId = data[data.length - 1].id;
+                      addToTrip(
+                        {
+                          trip_id: newId,
+                          destination_name: selectedItem.destination_name,
+                          category: selectedItem.category,
+                          address: selectedItem.address,
+                          lat: selectedItem.lat,
+                          lng: selectedItem.lng,
+                          city: selectedItem.city,
+                          state: selectedItem.state,
+                        },
+                        authState
+                      );
+                    })
+                  )
+                  .then(() => {
                     handleTripListUpdate();
-                  });
-                })
+                    removePin(selectedItem.id, authState).then(() => {
+                      handlePinListUpdate();
+                      handleTripListUpdate();
+                    });
+                  })
               }
             >
               <h4>Create new trip</h4>
