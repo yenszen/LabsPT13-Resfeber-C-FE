@@ -76,21 +76,39 @@ a {
 }
 
 .search-results {
+  overflow: auto;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.button-controls {
+  width: 60%;
+  background-color: grey;
+  margin: 0 auto;
   display: flex;
-  flex-flow: row wrap;
-  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-controls button {
+  width: 100%;
+  background-color: #333;
+  border: none;
 }
 
 .result-card {
-  width: 90%;
+  width: 60%;
   margin: 1rem;
   padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   border-radius: 10px;
-  border: 2px solid black;
+  border: 5px solid #777;
+  display: inline-block;
+  text-align: center;
+}
+
+.result-card:hover {
+  background-color: #777;
+  color: white;
 }
 
 @media only screen and (min-width: 600px) {

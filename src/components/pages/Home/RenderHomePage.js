@@ -27,8 +27,6 @@ function RenderHomePage(props) {
     tempMarkers,
     addMarkers,
     removeMarkers,
-    mapView,
-    handleMapView,
     manual,
     setManual,
     isModalVisible,
@@ -98,8 +96,7 @@ function RenderHomePage(props) {
 
         <section>
           <Button
-            buttonText={mapView ? 'Explore Destinations' : 'Explore Map'}
-            handleClick={handleMapView}
+            buttonText="Explore!"
             style={{ background: 'black', color: 'white' }}
           />
           <Button
@@ -109,60 +106,15 @@ function RenderHomePage(props) {
           />
         </section>
 
-        {mapView ? (
-          <ReactMapGL
-            {...viewport}
-            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-            mapStyle="mapbox://styles/mapbox/streets-v11"
-            onViewportChange={viewport => setViewport(viewport)}
-          >
-            {tempMarkers.length > 0 ? (
-              <React.Fragment>
-                {tempMarkers.map(result => (
-                  <Marker
-                    key={result.venue.id}
-                    latitude={result.venue.location.lat}
-                    longitude={result.venue.location.lng}
-                  >
-                    <div
-                      onClick={e => {
-                        e.preventDefault();
-                        setSelectedResult(result);
-                      }}
-                      className="marker"
-                    >
-                      <span></span>
-                    </div>
-                  </Marker>
-                ))}
-              </React.Fragment>
-            ) : null}
-
-            {selectedResult ? (
-              <Popup
-                latitude={selectedResult.venue.location.lat}
-                longitude={selectedResult.venue.location.lng}
-                onClose={() => setSelectedResult(null)}
-              >
-                <div>
-                  <h4>{selectedResult.venue.name}</h4>
-                  <p>Category: {selectedResult.venue.categories[0].name}</p>
-                  <p>Address: {selectedResult.venue.location.address}</p>
-                </div>
-              </Popup>
-            ) : null}
-          </ReactMapGL>
-        ) : null}
-
-        {searchResults && !mapView ? (
-          <React.Fragment>
-            <div className="search-results">
-              {searchResults.map((result, index) => {
-                return (
-                  <div key={result.venue.id} className="result-card">
-                    <h4>{result.venue.name}</h4>
-                    <p>Category: {result.venue.categories[0].name}</p>
-                    <p>Address: {result.venue.location.address}</p>
+        {searchResults ? (
+          <div className="search-results">
+            {searchResults.map((result, index) => {
+              return (
+                <div key={result.venue.id} className="result-card">
+                  <h4>{result.venue.name}</h4>
+                  <p>Category: {result.venue.categories[0].name}</p>
+                  <p>Address: {result.venue.location.address}</p>
+                  <div className="button-controls">
                     <Button
                       buttonText="Show on map"
                       handleClick={() => addMarkers(result)}
@@ -195,84 +147,42 @@ function RenderHomePage(props) {
                       }}
                     />
                   </div>
-                );
-              })}
-              <Modal
-                title="Add to a Trip"
-                visible={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
-              >
-                {myTrips.length > 0 ? (
-                  <div className="trip-modal">
-                    {myTrips.map((trip, index) => (
-                      <div
-                        key={index}
-                        className="trip-button"
-                        onClick={() => {
-                          addToTrip(
-                            {
-                              trip_id: trip.id,
-                              destination_name:
-                                searchResults[tripId].venue.name,
-                              category:
-                                searchResults[tripId].venue.categories[0].name,
-                              address:
-                                searchResults[tripId].venue.location.address,
-                              lat: searchResults[tripId].venue.location.lat,
-                              lng: searchResults[tripId].venue.location.lng,
-                              city: searchResults[tripId].venue.location.city,
-                              state: searchResults[tripId].venue.location.state,
-                            },
-                            authState
-                          ).then(() => alert('Destination added to trip!'));
-                        }}
-                      >
-                        <h4>{trip.tripname}</h4>
-                      </div>
-                    ))}
+                </div>
+              );
+            })}
+            <Modal
+              title="Add to a Trip"
+              visible={isModalVisible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+            >
+              {myTrips.length > 0 ? (
+                <div className="trip-modal">
+                  {myTrips.map((trip, index) => (
                     <div
-                      className="new-trip-button"
+                      key={index}
+                      className="trip-button"
                       onClick={() => {
-                        createNewTrip(
+                        addToTrip(
                           {
-                            tripname: `New trip to ${searchResults[tripId].venue.location.state}`,
-                            user_id: userInfo.sub,
+                            trip_id: trip.id,
+                            destination_name: searchResults[tripId].venue.name,
+                            category:
+                              searchResults[tripId].venue.categories[0].name,
+                            address:
+                              searchResults[tripId].venue.location.address,
+                            lat: searchResults[tripId].venue.location.lat,
+                            lng: searchResults[tripId].venue.location.lng,
+                            city: searchResults[tripId].venue.location.city,
+                            state: searchResults[tripId].venue.location.state,
                           },
                           authState
-                        )
-                          .then(() =>
-                            getMyTrips(userInfo.sub, authState).then(data => {
-                              const newId = data[data.length - 1].id;
-                              addToTrip(
-                                {
-                                  trip_id: newId,
-                                  destination_name:
-                                    searchResults[tripId].venue.name,
-                                  category:
-                                    searchResults[tripId].venue.categories[0]
-                                      .name,
-                                  address:
-                                    searchResults[tripId].venue.location
-                                      .address,
-                                  lat: searchResults[tripId].venue.location.lat,
-                                  lng: searchResults[tripId].venue.location.lng,
-                                  city:
-                                    searchResults[tripId].venue.location.city,
-                                  state:
-                                    searchResults[tripId].venue.location.state,
-                                },
-                                authState
-                              );
-                            })
-                          )
-                          .then(() => setTripUpdate(!tripUpdate));
+                        ).then(() => alert('Destination added to trip!'));
                       }}
                     >
-                      <h4>Create new trip</h4>
+                      <h4>{trip.tripname}</h4>
                     </div>
-                  </div>
-                ) : (
+                  ))}
                   <div
                     className="new-trip-button"
                     onClick={() => {
@@ -311,11 +221,91 @@ function RenderHomePage(props) {
                   >
                     <h4>Create new trip</h4>
                   </div>
-                )}
-              </Modal>
-            </div>
-          </React.Fragment>
+                </div>
+              ) : (
+                <div
+                  className="new-trip-button"
+                  onClick={() => {
+                    createNewTrip(
+                      {
+                        tripname: `New trip to ${searchResults[tripId].venue.location.state}`,
+                        user_id: userInfo.sub,
+                      },
+                      authState
+                    )
+                      .then(() =>
+                        getMyTrips(userInfo.sub, authState).then(data => {
+                          const newId = data[data.length - 1].id;
+                          addToTrip(
+                            {
+                              trip_id: newId,
+                              destination_name:
+                                searchResults[tripId].venue.name,
+                              category:
+                                searchResults[tripId].venue.categories[0].name,
+                              address:
+                                searchResults[tripId].venue.location.address,
+                              lat: searchResults[tripId].venue.location.lat,
+                              lng: searchResults[tripId].venue.location.lng,
+                              city: searchResults[tripId].venue.location.city,
+                              state: searchResults[tripId].venue.location.state,
+                            },
+                            authState
+                          );
+                        })
+                      )
+                      .then(() => setTripUpdate(!tripUpdate));
+                  }}
+                >
+                  <h4>Create new trip</h4>
+                </div>
+              )}
+            </Modal>
+          </div>
         ) : null}
+
+        <ReactMapGL
+          {...viewport}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+          mapStyle="mapbox://styles/mapbox/streets-v11"
+          onViewportChange={viewport => setViewport(viewport)}
+        >
+          {tempMarkers.length > 0 ? (
+            <React.Fragment>
+              {tempMarkers.map(result => (
+                <Marker
+                  key={result.venue.id}
+                  latitude={result.venue.location.lat}
+                  longitude={result.venue.location.lng}
+                >
+                  <div
+                    onClick={e => {
+                      e.preventDefault();
+                      setSelectedResult(result);
+                    }}
+                    className="marker"
+                  >
+                    <span></span>
+                  </div>
+                </Marker>
+              ))}
+            </React.Fragment>
+          ) : null}
+
+          {selectedResult ? (
+            <Popup
+              latitude={selectedResult.venue.location.lat}
+              longitude={selectedResult.venue.location.lng}
+              onClose={() => setSelectedResult(null)}
+            >
+              <div>
+                <h4>{selectedResult.venue.name}</h4>
+                <p>Category: {selectedResult.venue.categories[0].name}</p>
+                <p>Address: {selectedResult.venue.location.address}</p>
+              </div>
+            </Popup>
+          ) : null}
+        </ReactMapGL>
       </Content>
     </Layout>
   );

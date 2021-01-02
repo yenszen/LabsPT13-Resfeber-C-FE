@@ -33,7 +33,6 @@ function HomeContainer({
   });
   const [tempMarkers, setTempMarkers] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
-  const [mapView, setMapView] = useState(true);
 
   // let users choose to browse between categories and manual query
   const [manual, setManual] = useState(false);
@@ -122,7 +121,6 @@ function HomeContainer({
     }
     setTempMarkers([]);
     setViewport({ ...viewport, zoom: 10 });
-    setMapView(false);
   };
 
   const handleQueryInput = e => {
@@ -159,10 +157,6 @@ function HomeContainer({
     setTempMarkers([]);
   };
 
-  const handleMapView = () => {
-    setMapView(!mapView);
-  };
-
   return (
     <React.Fragment>
       {authState.isAuthenticated && !userInfo && (
@@ -186,8 +180,6 @@ function HomeContainer({
           tempMarkers={tempMarkers}
           addMarkers={addMarkers}
           removeMarkers={removeMarkers}
-          mapView={mapView}
-          handleMapView={handleMapView}
           manual={manual}
           setManual={setManual}
           isModalVisible={isModalVisible}
