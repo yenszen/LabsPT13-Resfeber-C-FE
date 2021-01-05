@@ -31,9 +31,10 @@
 }
 
 .trip-card {
-  width: 75%;
+  width: 100%;
   margin: 1rem 0;
   text-align: center;
+  border: 2px solid #777;
 }
 
 .dashboard {
