@@ -44,13 +44,15 @@ const PinnedListContainer = () => {
   }, [memoAuthService]);
 
   const handlePinListUpdate = () => {
-    getPins(authState).then(data => {
-      if (data.length > 0) {
-        setPins(data);
-      } else {
-        setPins([]);
-      }
-    });
+    if (userInfo) {
+      getPins(userInfo.sub, authState).then(data => {
+        if (data.length > 0) {
+          setPins(data);
+        } else {
+          setPins([]);
+        }
+      });
+    }
   };
 
   const handleTripListUpdate = () => {
@@ -107,7 +109,7 @@ const PinnedListContainer = () => {
       ) : (
         <React.Fragment>
           <Navbar />
-          <LoadingComponent message="Fetching pinned destinations" />
+          <LoadingComponent message="There are currently no pinned destinations" />
         </React.Fragment>
       )}
     </React.Fragment>

@@ -202,9 +202,12 @@ const removeFromTrip = (itineraryId, authState) => {
 };
 
 // PINS API CALLS
-const getPins = authState => {
+const getPins = (userId, authState) => {
   try {
-    return apiAuthGet(pinsURL, getAuthHeader(authState)).then(res => {
+    return apiAuthGet(
+      `${pinsURL}/${userId}/user`,
+      getAuthHeader(authState)
+    ).then(res => {
       console.log('getPins', res.data);
       return res.data;
     });
