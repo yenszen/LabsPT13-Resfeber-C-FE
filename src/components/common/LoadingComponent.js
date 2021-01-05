@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Result } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 
 function LoadingComponent(props) {
   const { message } = props;
 
-  return <div>{message}</div>;
+  return <Result title={message} icon={<SmileOutlined />} />;
 }
 
 export default LoadingComponent;

@@ -50,7 +50,7 @@ function TripsContainer() {
       ) : (
         <React.Fragment>
           <Navbar />
-          <LoadingComponent message="Fetching trips" />
+          <LoadingComponent message="You have not added any trips yet" />
         </React.Fragment>
       )}
     </React.Fragment>
