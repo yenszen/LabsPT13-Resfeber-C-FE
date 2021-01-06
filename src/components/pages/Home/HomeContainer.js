@@ -48,16 +48,16 @@ function HomeContainer({
   const handleCancel = () => setIsModalVisible(false);
   const handleTripId = id => setTripId(id);
 
-  useEffect(() => {
-    getMyTrips(authState).then(data => {
-      if (data.length > 0) {
-        setMyTrips(data);
-      } else {
-        setMyTrips([]);
-      }
-    });
-    // eslint-disable-next-line
-  }, [tripUpdate]);
+  // useEffect(() => {
+  //   getMyTrips(authState).then(data => {
+  //     if (data.length > 0) {
+  //       setMyTrips(data);
+  //     } else {
+  //       setMyTrips([]);
+  //     }
+  //   });
+  //   // eslint-disable-next-line
+  // }, [tripUpdate]);
 
   useEffect(() => {
     let isSubscribed = true;
