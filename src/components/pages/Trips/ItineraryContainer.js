@@ -6,6 +6,8 @@ import {
   removeFromTrip,
   getFuelData,
   getDrivingDistance,
+  getAirbnbPrice,
+  getCovidScore,
 } from '../../../api';
 import { LoadingComponent } from '../../common';
 import { useHistory } from 'react-router-dom';
@@ -17,6 +19,10 @@ function ItineraryContainer(props) {
   const [gasPrices, setGasPrices] = useState(null);
   const [coordinates, setCoordinates] = useState([]);
   const [drivingInfo, setDrivingInfo] = useState(null);
+  const [covidStatus, setCovidStatus] = useState(null);
+  const [numNights, setNumNights] = useState(1);
+  const [roomType, setRoomType] = useState('Entire home/apt');
+  const [airbnbEst, setAirbnbEst] = useState(0);
 
   useEffect(() => {
     let tripId = parseInt(props.match.params.id);
@@ -25,7 +31,6 @@ function ItineraryContainer(props) {
   }, []);
 
   useEffect(() => {
-    console.log('itinerary', itinerary);
     if (itinerary.length > 0) {
       let joined = coordinates;
       itinerary.map(destination => {
@@ -34,6 +39,10 @@ function ItineraryContainer(props) {
         return (joined = [...joined, stringified]);
       });
       setCoordinates(joined);
+
+      getCovidScore(itinerary[0].state).then(data =>
+        setCovidStatus(data.color)
+      );
     }
     // eslint-disable-next-line
   }, [itinerary]);
@@ -68,6 +77,29 @@ function ItineraryContainer(props) {
     history.push(`/edit-trip/${tripId}`);
   };
 
+  const handleNumNights = e => {
+    setNumNights(e.target.value);
+  };
+
+  const handleRoomTypeChange = type => {
+    setRoomType(type);
+  };
+
+  const handleAirbnbSubmit = e => {
+    e.preventDefault();
+
+    const body = {
+      lat: itinerary[0].lat,
+      lon: itinerary[0].lng,
+      room_type: roomType,
+      num_nights: numNights,
+    };
+
+    getAirbnbPrice(body).then(data => {
+      setAirbnbEst(data);
+    });
+  };
+
   if (itinerary) {
     return (
       <RenderItinerary
@@ -80,6 +112,12 @@ function ItineraryContainer(props) {
         goToEditForm={goToEditForm}
         gasPrices={gasPrices}
         drivingInfo={drivingInfo}
+        covidStatus={covidStatus}
+        numNights={numNights}
+        handleNumNights={handleNumNights}
+        handleRoomTypeChange={handleRoomTypeChange}
+        handleAirbnbSubmit={handleAirbnbSubmit}
+        airbnbEst={airbnbEst}
       />
     );
   } else {

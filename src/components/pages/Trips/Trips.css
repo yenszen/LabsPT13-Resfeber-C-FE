@@ -3,6 +3,7 @@
   background-color: white;
 }
 
+/* TRIPS styling */
 .trips-header {
   width: 25%;
   margin: 0 auto;
@@ -37,10 +38,100 @@
   border: 2px solid #777;
 }
 
-.dashboard {
+/* ITINERARY STYLING */
+.itinerary-header {
   padding: 1rem;
   display: flex;
   justify-content: space-between;
+}
+
+.itinerary-header .buttons {
+  width: 40%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard .info {
+  width: 90%;
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.covid-status {
+  text-align: center;
+}
+
+.covid-status h4 {
+  display: flex;
+  align-items: center;
+}
+
+.covid-block {
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.mild,
+.moderate,
+.severe {
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.mild {
+  background-color: green;
+}
+
+.moderate {
+  background-color: yellow;
+}
+
+.severe {
+  background-color: red;
+}
+
+.airbnb {
+  width: 50%;
+  height: 30vh;
+  /* background-color: indianred; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.airbnb form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.airbnb form .num-nights {
+  display: flex;
+  flex-direction: column;
+}
+
+.airbnb form input {
+  border: 1px solid #777;
+  height: 2rem;
+}
+
+.airbnb form button {
+  width: 75%;
+  margin: 1rem auto 0;
 }
 
 .carousel-header {
@@ -57,4 +148,33 @@
   line-height: 3rem;
   text-align: center;
   background-color: #364d79;
+}
+
+@media only screen and (min-width: 800px) {
+  .trip-card {
+    width: 50%;
+  }
+
+  .dashboard .info {
+    width: 75%;
+    margin: 1rem;
+    display: flex;
+    justify-content: space-between;
+    /* background-color: lightcoral; */
+  }
+
+  .airbnb {
+    width: 60%;
+    height: 20vh;
+    /* background-color: indianred; */
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+
+  .airbnb form button {
+    width: 95%;
+  }
 }
