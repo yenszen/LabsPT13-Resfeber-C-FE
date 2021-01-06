@@ -19,13 +19,14 @@ import 'antd/dist/antd.less';
 import './app.css';
 
 import { NotFoundPage } from './components/pages/NotFound';
-import { ExampleListPage } from './components/pages/ExampleList';
+import { PinnedList } from './components/pages/Pins';
 import { HomePage } from './components/pages/Home';
 import { ProfileListPage, ProfileForm } from './components/pages/ProfileList';
 import { LoginPage } from './components/pages/Login';
 import { ExampleDataViz } from './components/pages/ExampleDataViz';
 import { config } from './utils/oktaConfig';
 import { LoadingComponent } from './components/common';
+import { TripsList, Itinerary, TripForm } from './components/pages/Trips';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -62,10 +63,19 @@ function App() {
           exact
           component={() => <HomePage LoadingComponent={LoadingComponent} />}
         />
-        <SecureRoute path="/example-list" component={ExampleListPage} />
-        <SecureRoute path="/profile-list" component={ProfileListPage} />
+        <SecureRoute path="/pins" component={PinnedList} />
+        <SecureRoute path="/profile" component={ProfileListPage} />
         <SecureRoute path="/edit-form" component={ProfileForm} />
         <SecureRoute path="/datavis" component={ExampleDataViz} />
+        <SecureRoute path="/trips" component={TripsList} />
+        <SecureRoute
+          path="/itinerary/:id"
+          render={renderProps => <Itinerary {...renderProps} />}
+        />
+        <SecureRoute
+          path="/edit-trip/:id"
+          render={renderProps => <TripForm {...renderProps} />}
+        />
         <Route component={NotFoundPage} />
       </Switch>
     </Security>

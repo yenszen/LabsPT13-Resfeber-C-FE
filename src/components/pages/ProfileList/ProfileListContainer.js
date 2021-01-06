@@ -1,28 +1,44 @@
-import React from 'react';
-// import { useOktaAuth } from '@okta/okta-react';
-
-// import { getProfileData } from '../../../api';
-import { getTestProfileData } from '../../../api';
-
-import { List } from '../../common';
-
+import React, { useState, useEffect, useMemo } from 'react';
+import { useOktaAuth } from '@okta/okta-react';
+import { getProfileData } from '../../../api';
 import RenderProfileListPage from './RenderProfileListPage';
+import { LoadingComponent } from '../../common';
 
-// Here is an example of using our reusable List component to display some list data to the UI.
 const ProfileList = () => {
-  // const { authState } = useOktaAuth();
+  const { authState, authService } = useOktaAuth();
+  const [profile, setProfile] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  // eslint-disable-next-line
+  const [memoAuthService] = useMemo(() => [authService], []);
 
-  return (
-    <List
-      // Here we are passing our Axios request helper function as a callback.
-      // getItemsData={() => getProfileData(authState)}
-      getItemsData={getTestProfileData}
-      // Here we are passing in a component we want to show whilst waiting for our API request
-      // to complete.
-      LoadingComponent={() => <div>Loading Profiles...</div>}
-      // Here we are passing in a component that receives our new data and returns our JSX elements.
-      RenderItems={RenderProfileListPage}
-    />
+  useEffect(() => {
+    let isSubscribed = true;
+
+    memoAuthService
+      .getUser()
+      .then(info => {
+        if (isSubscribed) {
+          setUserInfo(info);
+        }
+      })
+      .catch(err => {
+        isSubscribed = false;
+        return setUserInfo(null);
+      });
+    return () => (isSubscribed = false);
+  }, [memoAuthService]);
+
+  useEffect(() => {
+    if (userInfo) {
+      getProfileData(userInfo.sub, authState).then(data => setProfile(data));
+    }
+    // eslint-disable-next-line
+  }, [userInfo]);
+
+  return profile ? (
+    <RenderProfileListPage data={profile} />
+  ) : (
+    <LoadingComponent message="Loading Profiles..." />
   );
 };
 

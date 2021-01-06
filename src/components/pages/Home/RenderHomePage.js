@@ -4,13 +4,14 @@ import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './Homepage.css';
-import { Layout } from 'antd';
+import { Layout, Modal } from 'antd';
 
 const { Content } = Layout;
 
 function RenderHomePage(props) {
   const {
     userInfo,
+    authState,
     searchResults,
     handleSubmit,
     handleQueryInput,
@@ -29,6 +30,18 @@ function RenderHomePage(props) {
     handleMapView,
     manual,
     setManual,
+    isModalVisible,
+    showModal,
+    handleOk,
+    handleCancel,
+    myTrips,
+    addToTrip,
+    createNewTrip,
+    tripId,
+    handleTripId,
+    addPin,
+    tripUpdate,
+    setTripUpdate,
   } = props;
 
   return (
@@ -143,7 +156,7 @@ function RenderHomePage(props) {
         {searchResults && !mapView ? (
           <React.Fragment>
             <div className="search-results">
-              {searchResults.map(result => {
+              {searchResults.map((result, index) => {
                 return (
                   <div key={result.venue.id} className="result-card">
                     <h4>{result.venue.name}</h4>
@@ -153,9 +166,102 @@ function RenderHomePage(props) {
                       buttonText="Show on map"
                       handleClick={() => addMarkers(result)}
                     />
+                    <Button
+                      buttonText="Pin destination"
+                      handleClick={() =>
+                        addPin(
+                          {
+                            destination_name: result.venue.name,
+                            category: result.venue.categories[0].name,
+                            address: result.venue.location.address,
+                            lat: result.venue.location.lat,
+                            lng: result.venue.location.lng,
+                            city: result.venue.location.city,
+                            state: result.venue.location.state,
+                            user_id: userInfo.sub,
+                          },
+                          authState
+                        )
+                          .then(() => alert('Pin added!'))
+                          .catch(err => console.log('/Pin POST error', err))
+                      }
+                    />
+                    <Button
+                      buttonText="Add to Trip"
+                      handleClick={() => {
+                        showModal();
+                        handleTripId(index);
+                      }}
+                    />
                   </div>
                 );
               })}
+              <Modal
+                title="Add to a Trip"
+                visible={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+              >
+                {myTrips.length > 0 ? (
+                  <div className="trip-modal">
+                    {myTrips.map((trip, index) => (
+                      <div
+                        key={index}
+                        className="trip-button"
+                        onClick={() => {
+                          addToTrip(
+                            {
+                              trip_id: trip.id,
+                              destination_name:
+                                searchResults[tripId].venue.name,
+                              category:
+                                searchResults[tripId].venue.categories[0].name,
+                              address:
+                                searchResults[tripId].venue.location.address,
+                              lat: searchResults[tripId].venue.location.lat,
+                              lng: searchResults[tripId].venue.location.lng,
+                              city: searchResults[tripId].venue.location.city,
+                              state: searchResults[tripId].venue.location.state,
+                            },
+                            authState
+                          ).then(() => alert('Destination added to trip!'));
+                        }}
+                      >
+                        <h4>{trip.tripname}</h4>
+                      </div>
+                    ))}
+                    <div
+                      className="new-trip-button"
+                      onClick={() => {
+                        createNewTrip(
+                          {
+                            tripname: `New trip to ${searchResults[tripId].venue.location.state}`,
+                            user_id: userInfo.sub,
+                          },
+                          authState
+                        ).then(() => setTripUpdate(!tripUpdate));
+                      }}
+                    >
+                      <h4>Create new trip</h4>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="new-trip-button"
+                    onClick={() => {
+                      createNewTrip(
+                        {
+                          tripname: `New trip to ${searchResults[tripId].venue.location.state}`,
+                          user_id: userInfo.sub,
+                        },
+                        authState
+                      ).then(() => setTripUpdate(!tripUpdate));
+                    }}
+                  >
+                    <h4>Create new trip</h4>
+                  </div>
+                )}
+              </Modal>
             </div>
           </React.Fragment>
         ) : null}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup, wait, waitFor } from '@testing-library/react';
+import { render, cleanup, waitFor } from '@testing-library/react';
 import { HomePage } from '../components/pages/Home';
 import { LoadingComponent } from '../components/common';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -8,8 +8,29 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { reducers } from '../state/reducers';
+import axios from 'axios';
 
 const store = createStore(reducers, applyMiddleware(thunk));
+
+beforeEach(() => {
+  axios.get = jest.fn(() =>
+    Promise.resolve({
+      data: {
+        data: [
+          {
+            id: 1,
+            tripname: 'southwest',
+            start_date: '12/12/2020',
+            end_date: '15/12/2020',
+            overall_covid_score: '7',
+            total_locations: 4,
+            user_id: '00asdjjx123',
+          },
+        ],
+      },
+    })
+  );
+});
 
 afterEach(cleanup);
 

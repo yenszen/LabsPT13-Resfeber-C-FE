@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 // we will define a bunch of API calls here.
-const apiUrl = `${process.env.REACT_APP_API_URI}/profiles`;
+const profileURL = `${process.env.REACT_APP_API_URI}/profile`;
+const tripsURL = `${process.env.REACT_APP_API_URI}/trips`;
+const itineraryURL = `${process.env.REACT_APP_API_URI}/itinerary`;
+const pinsURL = `${process.env.REACT_APP_API_URI}/pins`;
 
 const sleep = time =>
   new Promise(resolve => {
@@ -34,13 +37,32 @@ const getDSData = (url, authState) => {
     .catch(err => err);
 };
 
-const apiAuthGet = authHeader => {
-  return axios.get(apiUrl, { headers: authHeader });
+const apiAuthGet = (url, authHeader) => {
+  return axios.get(url, { headers: authHeader });
 };
 
-const getProfileData = authState => {
+const apiAuthPost = (url, data, authHeader) => {
+  return axios.post(url, data, { headers: authHeader });
+};
+
+const apiAuthPut = (url, data, authHeader) => {
+  return axios.put(url, data, { headers: authHeader });
+};
+
+const apiAuthPatch = (url, data, authHeader) => {
+  return axios.patch(url, data, { headers: authHeader });
+};
+
+const apiAuthDelete = (url, authHeader) => {
+  return axios.delete(url, { headers: authHeader });
+};
+
+// PROFILE API CALLS
+const getProfileData = (userId, authState) => {
   try {
-    return apiAuthGet(getAuthHeader(authState)).then(response => response.data);
+    return apiAuthGet(`${profileURL}/${userId}`, getAuthHeader(authState)).then(
+      res => res.data
+    );
   } catch (error) {
     return new Promise(() => {
       console.log(error);
@@ -49,18 +71,154 @@ const getProfileData = authState => {
   }
 };
 
-const getTestProfileData = () => {
+const editProfile = (data, authState) => {
   try {
-    return axios
-      .get('https://my-json-server.typicode.com/yenszen/database/profile')
-      .then(res => {
-        console.log('test profile data', res.data);
-        return res.data;
-      });
+    return apiAuthPut(profileURL, data, getAuthHeader(authState)).then(res =>
+      console.log('editProfile', res.data)
+    );
   } catch (error) {
-    console.log(error);
+    console.log('editProfile', error);
     return [];
   }
 };
 
-export { sleep, getExampleData, getProfileData, getDSData, getTestProfileData };
+// TRIPS API CALLS
+const getMyTrips = authState => {
+  try {
+    return apiAuthGet(tripsURL, getAuthHeader(authState)).then(res => {
+      console.log('getMyTrips', res.data);
+      return res.data;
+    });
+  } catch (error) {
+    console.log('getMyTrips', error);
+    return [];
+  }
+};
+
+const createNewTrip = (data, authState) => {
+  try {
+    return apiAuthPost(tripsURL, data, getAuthHeader(authState)).then(res =>
+      console.log('createNewTrip', res.data)
+    );
+  } catch (error) {
+    console.log('createNewTrip', error);
+    return [];
+  }
+};
+
+const editTrip = (tripId, data, authState) => {
+  try {
+    return apiAuthPatch(
+      `${tripsURL}/${tripId}`,
+      data,
+      getAuthHeader(authState)
+    ).then(res => console.log('editTrip', res.data));
+  } catch (error) {
+    console.log('editTrip', error);
+    return [];
+  }
+};
+
+const removeTrip = (tripId, authState) => {
+  try {
+    return apiAuthDelete(
+      `${tripsURL}/${tripId}`,
+      getAuthHeader(authState)
+    ).then(res => console.log('removeTrip', res.data));
+  } catch (error) {
+    console.log('removeTrip', error);
+    return [];
+  }
+};
+
+// ITINERARY (locations) API CALLS
+const getItinerary = (tripId, authState) => {
+  try {
+    return apiAuthGet(itineraryURL, getAuthHeader(authState)).then(res => {
+      console.log('getItinerary', res.data);
+      const relevantLocs = res.data.filter(item => item.trip_id === tripId);
+      // return res.data;
+      return relevantLocs;
+    });
+  } catch (error) {
+    console.log('getItinerary', error);
+    return [];
+  }
+};
+
+const addToTrip = (data, authState) => {
+  try {
+    return apiAuthPost(itineraryURL, data, getAuthHeader(authState)).then(res =>
+      console.log('addToTrip', res.data)
+    );
+  } catch (error) {
+    console.log('addToTrip', error);
+    return [];
+  }
+};
+
+const removeFromTrip = (itineraryId, authState) => {
+  try {
+    return apiAuthDelete(
+      `${itineraryURL}/${itineraryId}`,
+      getAuthHeader(authState)
+    ).then(res => console.log('removeFromTrip', res.data));
+  } catch (error) {
+    console.log('removeFromTrip', error);
+    return [];
+  }
+};
+
+// PINS API CALLS
+const getPins = authState => {
+  try {
+    return apiAuthGet(pinsURL, getAuthHeader(authState)).then(res => {
+      console.log('getPins', res.data);
+      return res.data;
+    });
+  } catch (error) {
+    console.log('getPins', error);
+    return [];
+  }
+};
+
+const addPin = (data, authState) => {
+  try {
+    return apiAuthPost(pinsURL, data, getAuthHeader(authState)).then(res =>
+      console.log('addPin', res.data)
+    );
+  } catch (error) {
+    console.log('addPin', error);
+    return [];
+  }
+};
+
+const removePin = (pinId, authState) => {
+  try {
+    return apiAuthDelete(
+      `${pinsURL}/${pinId}`,
+      getAuthHeader(authState)
+    ).then(res => console.log('removePin', res.data));
+  } catch (error) {
+    console.log('removePin', error);
+    return [];
+  }
+};
+
+export {
+  sleep,
+  getExampleData,
+  getDSData,
+  getProfileData,
+  editProfile,
+  getMyTrips,
+  createNewTrip,
+  editTrip,
+  removeTrip,
+  getItinerary,
+  addToTrip,
+  removeFromTrip,
+  getPins,
+  addPin,
+  removePin,
+};

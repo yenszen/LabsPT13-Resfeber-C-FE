@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import RenderProfileForm from './RenderProfileForm';
 import { useField } from 'formik';
 import { Form, Input, Select, Alert } from 'antd';
+import { editProfile } from '../../../api';
+import { useOktaAuth } from '@okta/okta-react';
 
 function ProfileFormContainer() {
+  const { authState, authService } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+  // eslint-disable-next-line
+  const [memoAuthService] = useMemo(() => [authService], []);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    memoAuthService
+      .getUser()
+      .then(info => {
+        if (isSubscribed) {
+          setUserInfo(info);
+        }
+      })
+      .catch(err => {
+        isSubscribed = false;
+        return setUserInfo(null);
+      });
+    return () => (isSubscribed = false);
+  }, [memoAuthService]);
+
   const FormItem = Form.Item;
 
   const CustomTextInput = ({ label, ...props }) => {
@@ -28,9 +52,9 @@ function ProfileFormContainer() {
       <FormItem>
         <label htmlFor={props.name}>{label}</label>
         <Select {...field} {...props} onChange={props.onChange}>
-          <Option value="single">Single</Option>
-          <Option value="couple">Couple</Option>
-          <Option value="family">Family</Option>
+          <Option value="Single">Single</Option>
+          <Option value="Couple">Couple</Option>
+          <Option value="Family">Family</Option>
         </Select>
         {meta.touched && meta.error ? (
           <Alert message={meta.error} type="error" />
@@ -47,12 +71,12 @@ function ProfileFormContainer() {
       <FormItem>
         <label htmlFor={props.name}>{label}</label>
         <Select {...field} {...props} onChange={props.onChange}>
-          <Option value="hatchback">Hatchback</Option>
-          <Option value="sedan">Sedan</Option>
-          <Option value="suv">SUV</Option>
-          <Option value="minivan">Minivan</Option>
-          <Option value="truck">Truck</Option>
-          <Option value="other">Other</Option>
+          <Option value="Hatchback">Hatchback</Option>
+          <Option value="Sedan">Sedan</Option>
+          <Option value="SUV">SUV</Option>
+          <Option value="Minivan">Minivan</Option>
+          <Option value="Truck">Truck</Option>
+          <Option value="Other">Other</Option>
         </Select>
         {meta.touched && meta.error ? (
           <Alert message={meta.error} type="error" />
@@ -69,10 +93,10 @@ function ProfileFormContainer() {
       <FormItem>
         <label htmlFor={props.id || props.name}>{label}</label>
         <Select {...field} {...props} onChange={props.onChange}>
-          <Option value="entirePlace">Entire Place</Option>
-          <Option value="privateRoom">Private Room</Option>
-          <Option value="sharedRoom">Shared Room</Option>
-          <Option value="hotelRoom">Hotel Room</Option>
+          <Option value="Entire Place">Entire Place</Option>
+          <Option value="Private Room">Private Room</Option>
+          <Option value="Shared Room">Shared Room</Option>
+          <Option value="Hotel Room">Hotel Room</Option>
         </Select>
         {meta.touched && meta.error ? (
           <Alert message={meta.error} type="error" />
@@ -88,6 +112,9 @@ function ProfileFormContainer() {
         CustomStatusSelect={CustomStatusSelect}
         CustomVehicleSelect={CustomVehicleSelect}
         CustomAccommodationSelect={CustomAccommodationSelect}
+        editProfile={editProfile}
+        userInfo={userInfo}
+        authState={authState}
       />
     </React.Fragment>
   );

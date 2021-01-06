@@ -6,6 +6,7 @@ import {
   fetchSearchResults,
   fetchCategoryResults,
 } from '../../../state/actions/index';
+import { getMyTrips, addToTrip, createNewTrip, addPin } from '../../../api';
 
 function HomeContainer({
   LoadingComponent,
@@ -36,6 +37,29 @@ function HomeContainer({
 
   // let users choose to browse between categories and manual query
   const [manual, setManual] = useState(false);
+
+  // everything that handles addToTrip modal
+  const [tripUpdate, setTripUpdate] = useState(true);
+  const [myTrips, setMyTrips] = useState([]);
+  const [tripId, setTripId] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = () => setIsModalVisible(true);
+  const handleOk = () => setIsModalVisible(false);
+  const handleCancel = () => setIsModalVisible(false);
+  const handleTripId = id => setTripId(id);
+
+  useEffect(() => {
+    if (userInfo) {
+      getMyTrips(authState).then(data => {
+        if (data.length > 0) {
+          setMyTrips(data);
+        } else {
+          setMyTrips([]);
+        }
+      });
+    }
+    // eslint-disable-next-line
+  }, [tripUpdate, userInfo]);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -147,6 +171,7 @@ function HomeContainer({
       {authState.isAuthenticated && userInfo && (
         <RenderHomePage
           userInfo={userInfo}
+          authState={authState}
           searchResults={searchResults}
           handleSubmit={handleSubmit}
           handleQueryInput={e => handleQueryInput(e)}
@@ -165,6 +190,18 @@ function HomeContainer({
           handleMapView={handleMapView}
           manual={manual}
           setManual={setManual}
+          isModalVisible={isModalVisible}
+          showModal={showModal}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          myTrips={myTrips}
+          addToTrip={addToTrip}
+          createNewTrip={createNewTrip}
+          tripId={tripId}
+          handleTripId={handleTripId}
+          addPin={addPin}
+          tripUpdate={tripUpdate}
+          setTripUpdate={setTripUpdate}
         />
       )}
     </React.Fragment>

@@ -9,11 +9,14 @@ function RenderProfileForm({
   CustomStatusSelect,
   CustomVehicleSelect,
   CustomAccommodationSelect,
+  editProfile,
+  userInfo,
+  authState,
 }) {
   const history = useHistory();
 
-  const onCancelClick = () => {
-    history.push('/profile-list');
+  const onReturnToPage = () => {
+    history.push('/profile');
   };
 
   return (
@@ -21,23 +24,23 @@ function RenderProfileForm({
       <Navbar />
       <Formik
         initialValues={{
-          name: '',
+          user_name: '',
           status: '',
           address_1: '',
           address_2: '',
           carType: '',
-          preferredBudget: '',
-          accommodationType: '',
+          budget: '',
+          accommodation_type: '',
         }}
         validationSchema={Yup.object({
-          name: Yup.string()
+          user_name: Yup.string()
             .required('Name required')
             .min(3, 'Must be at least 3 characters')
             .max(15, 'Must be 15 characters or less')
             .matches(/^[A-Za-z ]+$/),
           status: Yup.string()
             .required('Status required')
-            .oneOf(['single', 'couple', 'family'], 'Invalid status'),
+            .oneOf(['Single', 'Couple', 'Family'], 'Invalid status'),
           address_1: Yup.string()
             .required('First address line required')
             .min(3, 'Must be at least 3 characters'),
@@ -45,26 +48,26 @@ function RenderProfileForm({
           carType: Yup.string()
             .required('Vehicle type information required')
             .oneOf(
-              ['hatchback', 'sedan', 'suv', 'minivan', 'truck', 'other'],
+              ['Hatchback', 'Sedan', 'SUV', 'Minivan', 'Truck', 'Other'],
               'Invalid car type'
             ),
-          preferredBudget: Yup.number()
+          budget: Yup.number()
             .required('Preferred budget information required')
             .positive()
             .integer(),
-          accommodationType: Yup.string()
+          accommodation_type: Yup.string()
             .required('Preferred accommodation information required')
             .oneOf(
-              ['entirePlace', 'privateRoom', 'sharedRoom', 'hotelRoom'],
+              ['Entire Place', 'Private Room', 'Shared Room', 'Hotel Room'],
               'Invalid accommodation type'
             ),
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            resetForm();
-            setSubmitting(false);
-          }, 2000);
+          resetForm();
+          setSubmitting(false);
+          editProfile({ ...values, id: userInfo.sub }, authState).then(() =>
+            onReturnToPage()
+          );
         }}
       >
         {props => (
@@ -72,7 +75,7 @@ function RenderProfileForm({
             <h2>Edit profile</h2>
             <CustomTextInput
               label="Name"
-              name="name"
+              name="user_name"
               type="text"
               placeholder="John Doe"
             />
@@ -100,15 +103,15 @@ function RenderProfileForm({
             />
             <CustomTextInput
               label="Preferred Budget"
-              name="preferredBudget"
+              name="budget"
               type="number"
               placeholder="1000"
             />
             <CustomAccommodationSelect
               label="Accommodation Type"
-              name="accommodationType"
+              name="accommodation_type"
               onChange={value =>
-                props.setFieldValue('accommodationType', value)
+                props.setFieldValue('accommodation_type', value)
               }
             />
             <div
@@ -126,7 +129,7 @@ function RenderProfileForm({
               <Button
                 type="danger"
                 buttonText="Cancel"
-                handleClick={onCancelClick}
+                handleClick={onReturnToPage}
               />
             </div>
           </Form>

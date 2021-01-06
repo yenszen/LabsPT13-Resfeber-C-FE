@@ -98,3 +98,37 @@ a {
     width: 40%;
   }
 }
+
+.trip-modal {
+  /* background: grey; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.trip-button {
+  width: 100%;
+  /* background-color: lightcyan; */
+  text-align: center;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.trip-button:nth-child(even) {
+  background-color: lightgrey;
+}
+
+.trip-button:hover,
+.new-trip-button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.new-trip-button {
+  width: 100%;
+  background-color: lightsteelblue;
+  text-align: center;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
