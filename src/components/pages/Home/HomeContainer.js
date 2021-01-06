@@ -49,15 +49,17 @@ function HomeContainer({
   const handleTripId = id => setTripId(id);
 
   useEffect(() => {
-    getMyTrips(authState).then(data => {
-      if (data.length > 0) {
-        setMyTrips(data);
-      } else {
-        setMyTrips([]);
-      }
-    });
+    if (userInfo) {
+      getMyTrips(authState).then(data => {
+        if (data.length > 0) {
+          setMyTrips(data);
+        } else {
+          setMyTrips([]);
+        }
+      });
+    }
     // eslint-disable-next-line
-  }, [tripUpdate]);
+  }, [tripUpdate, userInfo]);
 
   useEffect(() => {
     let isSubscribed = true;
