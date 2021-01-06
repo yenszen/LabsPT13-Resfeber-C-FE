@@ -66,6 +66,37 @@ const getDrivingDistance = coordinates => {
   }
 };
 
+const getAirbnbPrice = data => {
+  try {
+    return axios
+      .post(
+        'http://labspt13-resfeber-c-ds.eba-ai47pmnm.us-east-1.elasticbeanstalk.com/airbnb',
+        data
+      )
+      .then(res => {
+        console.log('getAirbnbPrice', res.data);
+        return res.data;
+      });
+  } catch (error) {
+    console.log('getAirbnbPrice', error);
+  }
+};
+
+const getCovidScore = stateCode => {
+  try {
+    return axios
+      .get(
+        `http://labspt13-resfeber-c-ds.eba-ai47pmnm.us-east-1.elasticbeanstalk.com/covid_score_state/${stateCode}`
+      )
+      .then(res => {
+        console.log('getCovidScore', res.data);
+        return res.data;
+      });
+  } catch (error) {
+    console.log('getCovidScore', error);
+  }
+};
+
 const apiAuthGet = (url, authHeader) => {
   return axios.get(url, { headers: authHeader });
 };
@@ -246,6 +277,8 @@ export {
   getDSData,
   getFuelData,
   getDrivingDistance,
+  getAirbnbPrice,
+  getCovidScore,
   getProfileData,
   editProfile,
   getMyTrips,
