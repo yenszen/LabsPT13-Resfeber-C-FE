@@ -49,18 +49,13 @@ function HomeContainer({
   const handleTripId = id => setTripId(id);
 
   useEffect(() => {
-    let mounted = true;
     getMyTrips(authState).then(data => {
-      if (mounted && data.length > 0) {
+      if (data.length > 0) {
         setMyTrips(data);
       } else {
         setMyTrips([]);
       }
     });
-
-    return function cleanup() {
-      mounted = false;
-    };
     // eslint-disable-next-line
   }, [tripUpdate]);
 
