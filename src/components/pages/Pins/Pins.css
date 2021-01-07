@@ -1,5 +1,69 @@
+.pins-header {
+  width: 150px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pins-header span {
+  font-size: 2rem;
+}
+
+.pins-header .pins-icon {
+  width: 50px;
+  height: 50px;
+  vertical-align: bottom;
+}
+
+.recents {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.scrollmenu {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.pin-card {
+  width: 200px;
+  height: 100%;
+  margin: 1rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 3px solid #777;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.pin-card p {
+  font-size: 1.1rem;
+}
+
+.pin-result {
+  padding: 1rem;
+  border-top: 3px solid rgb(160, 160, 160);
+  display: flex;
+  justify-content: space-between;
+}
+
+.pin-result .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pin-result .info button:first-child {
+  background-color: #333;
+  color: white;
+}
+
 .trip-modal {
-  /* background: grey; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -8,7 +72,6 @@
 
 .trip-button {
   width: 100%;
-  /* background-color: lightcyan; */
   text-align: center;
   height: 2.5rem;
   line-height: 2.5rem;

@@ -20,9 +20,15 @@ jest.mock('@okta/okta-react', () => ({
 
 describe('<RenderHomePage /> test suite', () => {
   test('user info displays successfully', () => {
+    const tempMarkers = [];
+    const setViewport = () => null;
     const { getByText } = render(
       <Router>
-        <RenderHomePage userInfo={{ name: 'Sara' }} />
+        <RenderHomePage
+          userInfo={{ name: 'Sara' }}
+          tempMarkers={tempMarkers}
+          setViewport={setViewport}
+        />
       </Router>
     );
     expect(getByText(/welcome sara/i).innerHTML).toBe('Welcome Sara.');

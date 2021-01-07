@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Card, Modal } from 'antd';
+import { Layout, Modal } from 'antd';
 import { Navbar, Button } from '../../common';
+import { MapPin } from 'react-feather';
 import './Pins.css';
 
 const RenderPinnedList = ({
@@ -20,43 +21,54 @@ const RenderPinnedList = ({
   addToTrip,
   selectedItem,
   handleSelectedItem,
+  getMyTrips,
 }) => (
   <Layout style={{ background: 'white' }}>
     <Navbar />
+    <div className="pins-header">
+      <MapPin className="pins-icon" />
+      <span>Pins</span>
+    </div>
+    <div className="recents">
+      <h1>Recently Pinned</h1>
+      <div className="scrollmenu">
+        {data.map(pin => (
+          <div className="pin-card">
+            <h1>{pin.destination_name}</h1>
+            <p>
+              {pin.city}, {pin.state}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
     {data.map((item, index) => (
-      <React.Fragment>
-        <Card
-          title={item.destination_name}
-          extra={
-            <div>
-              <Button
-                buttonText="Add to trip"
-                type="ghost"
-                handleClick={() => {
-                  handleSelectedItem(item);
-                  showModal();
-                }}
-              />
-              <Button
-                buttonText="Remove pin"
-                type="danger"
-                handleClick={() => {
-                  removePin(item.id, authState).then(() =>
-                    handlePinListUpdate()
-                  );
-                }}
-              />
-            </div>
-          }
-          key={index}
-          style={{ width: '80%', margin: '1rem auto 0' }}
-        >
-          <p>{item.category}</p>
-          <p>{item.address}</p>
-          <p>
-            {item.city}, {item.state}
-          </p>
-        </Card>
+      <React.Fragment key={index}>
+        <div className="pin-result">
+          <div className="info">
+            <h3>{item.destination_name}</h3>
+            <p>
+              {item.address}, {item.city}, {item.state}
+            </p>
+          </div>
+          <div className="info">
+            <Button
+              buttonText="Add to trip"
+              type="ghost"
+              handleClick={() => {
+                handleSelectedItem(item);
+                showModal();
+              }}
+            />
+            <Button
+              buttonText="Remove pin"
+              type="ghost"
+              handleClick={() => {
+                removePin(item.id, authState).then(() => handlePinListUpdate());
+              }}
+            />
+          </div>
+        </div>
 
         <Modal
           title="Add to Trip"
@@ -103,12 +115,31 @@ const RenderPinnedList = ({
                       user_id: userInfo.sub,
                     },
                     authState
-                  ).then(() => {
-                    removePin(selectedItem.id, authState).then(() => {
-                      handlePinListUpdate();
-                      handleTripListUpdate();
-                    });
-                  })
+                  )
+                    .then(() =>
+                      getMyTrips(userInfo.sub, authState).then(data => {
+                        const newId = data[data.length - 1].id;
+                        addToTrip(
+                          {
+                            trip_id: newId,
+                            destination_name: selectedItem.destination_name,
+                            category: selectedItem.category,
+                            address: selectedItem.address,
+                            lat: selectedItem.lat,
+                            lng: selectedItem.lng,
+                            city: selectedItem.city,
+                            state: selectedItem.state,
+                          },
+                          authState
+                        );
+                      })
+                    )
+                    .then(() => {
+                      removePin(selectedItem.id, authState).then(() => {
+                        handlePinListUpdate();
+                        handleTripListUpdate();
+                      });
+                    })
                 }
               >
                 <h4>Create New Trip</h4>
@@ -124,13 +155,32 @@ const RenderPinnedList = ({
                     user_id: userInfo.sub,
                   },
                   authState
-                ).then(() => {
-                  handleTripListUpdate();
-                  removePin(selectedItem.id, authState).then(() => {
-                    handlePinListUpdate();
+                )
+                  .then(() =>
+                    getMyTrips(userInfo.sub, authState).then(data => {
+                      const newId = data[data.length - 1].id;
+                      addToTrip(
+                        {
+                          trip_id: newId,
+                          destination_name: selectedItem.destination_name,
+                          category: selectedItem.category,
+                          address: selectedItem.address,
+                          lat: selectedItem.lat,
+                          lng: selectedItem.lng,
+                          city: selectedItem.city,
+                          state: selectedItem.state,
+                        },
+                        authState
+                      );
+                    })
+                  )
+                  .then(() => {
                     handleTripListUpdate();
-                  });
-                })
+                    removePin(selectedItem.id, authState).then(() => {
+                      handlePinListUpdate();
+                      handleTripListUpdate();
+                    });
+                  })
               }
             >
               <h4>Create new trip</h4>

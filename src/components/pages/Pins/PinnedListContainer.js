@@ -44,30 +44,34 @@ const PinnedListContainer = () => {
   }, [memoAuthService]);
 
   const handlePinListUpdate = () => {
-    getPins(authState).then(data => {
-      if (data.length > 0) {
-        setPins(data);
-      } else {
-        setPins([]);
-      }
-    });
+    if (userInfo) {
+      getPins(userInfo.sub, authState).then(data => {
+        if (data.length > 0) {
+          setPins(data);
+        } else {
+          setPins([]);
+        }
+      });
+    }
   };
 
   const handleTripListUpdate = () => {
-    getMyTrips(authState).then(data => {
-      if (data.length > 0) {
-        setMyTrips(data);
-      } else {
-        setMyTrips([]);
-      }
-    });
+    if (userInfo) {
+      getMyTrips(userInfo.sub, authState).then(data => {
+        if (data.length > 0) {
+          setMyTrips(data);
+        } else {
+          setMyTrips([]);
+        }
+      });
+    }
   };
 
   useEffect(() => {
     handlePinListUpdate();
     handleTripListUpdate();
     // eslint-disable-next-line
-  }, []);
+  }, [userInfo]);
 
   // handles adding Pins to Trips
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -100,11 +104,12 @@ const PinnedListContainer = () => {
           addToTrip={addToTrip}
           selectedItem={selectedItem}
           handleSelectedItem={handleSelectedItem}
+          getMyTrips={getMyTrips}
         />
       ) : (
         <React.Fragment>
           <Navbar />
-          <LoadingComponent message="Fetching pinned destinations" />
+          <LoadingComponent message="There are currently no pinned destinations" />
         </React.Fragment>
       )}
     </React.Fragment>
