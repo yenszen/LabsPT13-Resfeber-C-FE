@@ -68,15 +68,10 @@ const getDrivingDistance = coordinates => {
 
 const getAirbnbPrice = data => {
   try {
-    return axios
-      .post(
-        'http://labspt13-resfeber-c-ds.eba-ai47pmnm.us-east-1.elasticbeanstalk.com/airbnb',
-        data
-      )
-      .then(res => {
-        console.log('getAirbnbPrice', res.data);
-        return res.data;
-      });
+    return axios.post(`${dataURL}/air_bnb`, data).then(res => {
+      console.log('getAirbnbPrice', res.data);
+      return res.data;
+    });
   } catch (error) {
     console.log('getAirbnbPrice', error);
   }
@@ -84,14 +79,10 @@ const getAirbnbPrice = data => {
 
 const getCovidScore = stateCode => {
   try {
-    return axios
-      .get(
-        `http://labspt13-resfeber-c-ds.eba-ai47pmnm.us-east-1.elasticbeanstalk.com/covid_score_state/${stateCode}`
-      )
-      .then(res => {
-        console.log('getCovidScore', res.data);
-        return res.data;
-      });
+    return axios.get(`${dataURL}/covid_score_state/${stateCode}`).then(res => {
+      console.log('getCovidScore', res.data);
+      return res.data;
+    });
   } catch (error) {
     console.log('getCovidScore', error);
   }
