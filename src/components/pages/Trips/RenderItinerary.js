@@ -46,6 +46,19 @@ function RenderItinerary({
       </div>
 
       <div className="dashboard">
+        <div className="covid-status">
+          <h4>
+            Covid Score -{' '}
+            <span
+              className="covid-block"
+              style={{ backgroundColor: `${covidStatus}` }}
+            ></span>
+          </h4>
+          <p>
+            <span className="mild" /> Mild <span className="moderate" />{' '}
+            Moderate <span className="severe" /> Severe
+          </p>
+        </div>
         {drivingInfo ? (
           <div className="info">
             <h4>
@@ -55,21 +68,6 @@ function RenderItinerary({
               {Number.parseFloat(drivingInfo.duration / 60).toFixed(1)} minutes
               total
             </h4>
-            {covidStatus ? (
-              <div className="covid-status">
-                <h4>
-                  Covid Score -{' '}
-                  <span
-                    className="covid-block"
-                    style={{ backgroundColor: `${covidStatus}` }}
-                  ></span>
-                </h4>
-                <p>
-                  <span className="mild" /> Mild <span className="moderate" />{' '}
-                  Moderate <span className="severe" /> Severe
-                </p>
-              </div>
-            ) : null}
           </div>
         ) : null}
 
